@@ -81,10 +81,17 @@
   var rev = $$('[data-reveal]');
   if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     var rio = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); rio.unobserve(e.target); } });
-    }, { threshold: .15, rootMargin: '0px 0px -6% 0px' });
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var el = e.target; el.classList.add('is-in'); rio.unobserve(el);
+        // после появления снимаем will-change, чтобы не держать лишние слои
+        var done = function () { el.classList.add('is-done'); };
+        el.addEventListener('transitionend', function te(ev) { if (ev.target === el && ev.propertyName === 'transform') { el.removeEventListener('transitionend', te); done(); } });
+        setTimeout(done, 2500);
+      });
+    }, { threshold: .2, rootMargin: '0px 0px -12% 0px' }); // запасной вариант для браузеров без анимации по прокрутке
     rev.forEach(function (el) { rio.observe(el); });
-  } else rev.forEach(function (el) { el.classList.add('is-in'); });
+  } else rev.forEach(function (el) { el.classList.add('is-in', 'is-done'); });
 
   /* ---------- Окна ---------- */
   var dialogs = { contact: $('#dlg-contact'), bom: $('#dlg-bom'), search: $('#dlg-search') };

@@ -177,6 +177,15 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
 /* появление слева при прокрутке (ТЗ, блоки 02–05) */
 .js [data-reveal]{opacity:0;transform:translateX(-44px);transition:opacity .9s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--d,0) * 140ms)}
 .js [data-reveal].is-in{opacity:1;transform:none}
+.js [data-reveal]:not(.is-done){will-change:opacity,transform}
+/* где браузер умеет (Safari 26 / iOS 26, Chrome 115+), появление привязано к прокрутке:
+   блок выезжает ровно по мере прокрутки и встаёт на место к трети высоты экрана — без таймеров и рывков */
+@keyframes revealIn{from{opacity:0;transform:translateX(var(--rv-x,-44px))}to{opacity:1;transform:none}}
+@supports (animation-timeline: view()){
+  .js [data-reveal]{opacity:1;transform:none;transition:none;will-change:opacity,transform;
+    animation:revealIn cubic-bezier(.22,.61,.36,1) both;animation-timeline:view();
+    animation-range:cover calc(12% + var(--d,0) * 3%) cover calc(32% + var(--d,0) * 3%)}
+}
 
 /* 02 О нас */
 .about{border-top:1px solid var(--line)}
@@ -424,6 +433,9 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
     padding:10px var(--gut-r) calc(10px + env(safe-area-inset-bottom,0px)) var(--gut);background:rgba(37,36,34,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 -1px 0 var(--line);
     transform:translateY(110%);transition:transform .4s var(--ease)}
   .actbar.is-on{transform:none}
+  /* телефон: блоки идут друг под другом и входят в экран по одному — без лесенки задержек, короче и ближе */
+  .js [data-reveal]{--rv-x:-24px;transform:translateX(-24px);transition-duration:.7s;transition-delay:0s;transition-timing-function:cubic-bezier(.22,.61,.36,1)}
+  @supports (animation-timeline: view()){ .js [data-reveal]{transform:none;animation-range:cover 12% cover 32%} }
   .actbar__b{display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;font-size:16px;font-weight:500;text-decoration:none;border:1px solid var(--line-s)}
   .actbar__b svg{width:20px;height:20px}
   .actbar__b--mint{background:var(--mint);border-color:var(--mint);color:var(--ink)}
@@ -448,7 +460,7 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
-  .js [data-reveal]{opacity:1;transform:none}
+  .js [data-reveal]{opacity:1;transform:none;animation:none!important}
 }
 
 /* подсветка карточки из поиска, шапка при открытом меню */
