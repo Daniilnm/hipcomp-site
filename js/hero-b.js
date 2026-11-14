@@ -8,7 +8,10 @@
    — по пластине по замкнутой «восьмёрке» плывёт лупа и показывает атомы на глубине фокуса;
    — когда фокус возвращается на поверхность, вдоль косого среза знака проходит луч
      и знак светится изнутри — затем фокус снова уходит вглубь.
-   Одна перспективная камера, один источник света, все окружности и тени — в проекции. */
+   Одна перспективная камера, один источник света, все окружности и тени — в проекции.
+   Цвет самой пластины натуральный (тёмное стекло, нейтральный торец); фирменный салатно-мятный
+   появляется только в свете: блик, который обходит кромку за цикл, отсвет на торце под ним,
+   мятный луч по срезу знака и свечение знака изнутри. */
 (function () {
   'use strict';
   var canvas = document.getElementById('stack');
@@ -18,7 +21,7 @@
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   var FREEZE = parseFloat(new URLSearchParams(location.search).get('frame'));
 
-  var PAPER = [243, 241, 234], MINT = [131, 224, 190], DEEP = [36, 100, 80], GRAPH = [45, 44, 42];
+  var PAPER = [243, 241, 234], MINT = [131, 224, 190], GRAPH = [45, 44, 42];
   var C_PAPER = '#F3F1EA', C_MINT = '#83E0BE', C_HOT = '#C9F2E2';
   function rgba(c, a) { return 'rgba(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ',' + a + ')'; }
   function mix(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }
@@ -27,15 +30,15 @@
   function seg(t, a, b) { return clamp((t - a) / (b - a)); }
   function sm(t) { t = clamp(t); return t * t * (3 - 2 * t); }
 
-  // ---- знак HC (малая форма), только прямые ----
+  // ---- знак HC, только прямые; все наклонные грани под 59° ----
   var PATHS = [
-    'M15.9648 59.1652L55.4083 0.939148H116.452L77.9475 59.1652H15.9648Z',
-    'M0 171.861H12.2087L50.713 112.696H63.8609L26.2957 171.861H49.7739L88.2783 112.696H151.2L221.635 0H171.861L136.174 59.1652H124.904L160.591 0H149.322L113.635 59.1652H78.887L0 171.861Z',
-    'M112.695 171.861H155.895L193.461 112.696H151.2L112.695 171.861Z',
-    'M193.461 112.696L259.2 0H362.504L325.878 59.1652H284.557L250.748 112.696H358.748L323.061 171.861H193.461L233.844 112.696H193.461Z',
-    'M339.965 59.1652H351.234L388.8 0H375.652L339.965 59.1652Z'
+    'M12.607 59.165L47.593 0.939L109.106 0.939L74.121 59.165Z',
+    'M0 171.861L8.1 171.861L43.65 112.696L57.267 112.696L21.717 171.861L45.665 171.861L81.215 112.696L145.555 112.696L213.27 0L166.206 0L130.656 59.165L119.386 59.165L154.936 0L143.667 0L108.117 59.165L67.714 59.165Z',
+    'M110.005 171.861L151.327 171.861L186.877 112.696L145.555 112.696Z',
+    'M186.877 112.696L254.591 0L356.38 0L320.83 59.165L278.149 59.165L245.984 112.696L353.093 112.696L317.543 171.861L190.291 171.861L225.841 112.696Z',
+    'M334.447 59.165L346.656 59.165L382.206 0L369.997 0Z'
   ];
-  var MW = 388.8, MH = 171.861, MS = .8; // знак на пластине: 311 из 510 по ширине
+  var MW = 382.206, MH = 171.861, MS = .8; // знак на пластине: 311 из 510 по ширине
   function parse(d) {
     var tok = d.match(/[MLHVZ]|-?\d*\.?\d+/g), pts = [], x = 0, y = 0, cmd = '', i = 0;
     while (i < tok.length) {
@@ -58,14 +61,14 @@
     return u >= 0 && v >= 0 && u < mask.width && v < mask.height && md[(v * mask.width + u) * 4 + 3] > 127;
   }
   // направление косого среза знака (в плоскости пластины) и нормаль к нему — по ним идёт луч
-  var SLANT = (function () { var dx = 15.9648 - 55.4083, dy = 59.1652 - .939148, l = Math.hypot(dx, dy); return [dx / l, dy / l]; })();
+  var SLANT = (function () { var dx = 12.6074 - 47.5932, dy = 59.1652 - 0.9391, l = Math.hypot(dx, dy); return [dx / l, dy / l]; })();
   var SN = [-SLANT[1], SLANT[0]];
 
-  // ---- пластина: окружность со срезом-ориентиром на дальней стороне ----
-  var R0 = 255, FLAT_Y = -R0 * .955, T = 22;
+  // ---- пластина: идеально круглая (без среза-ориентира — по просьбе заказчика) ----
+  var R0 = 255, T = 12; // толщина торца: изящная пластина
   var WPTS = (function () {
-    var cw = Math.sqrt(R0 * R0 - FLAT_Y * FLAT_Y), a0 = Math.atan2(FLAT_Y, cw), a1 = Math.atan2(FLAT_Y, -cw) + 2 * Math.PI, n = 140, out = [];
-    for (var i = 0; i <= n; i++) { var a = a0 + (a1 - a0) * i / n; out.push([R0 * Math.cos(a), R0 * Math.sin(a)]); }
+    var n = 180, out = [];
+    for (var i = 0; i < n; i++) { var a = 6.2832 * i / n; out.push([R0 * Math.cos(a), R0 * Math.sin(a)]); }
     return out;
   })();
   var WEDGES = edgesOf(WPTS);
@@ -81,8 +84,8 @@
 
   // ---- плоскости решётки: поверхность и три глубины (подписи шкалы) ----
   // плоскости идут через равные шаги, поэтому и шкала линейная: толщина пластины Si Ø150 мм по SEMI M1 — 675 мкм
-  var DEPTHS = [-1, -7, -13, -19], LABELS = { ru: ['0', '225 мкм', '450 мкм', '675 мкм'], en: ['0', '225 µm', '450 µm', '675 µm'] };
-  var NP = DEPTHS.length, DZ = 6;
+  var DEPTHS = [-1, -4.5, -8, -11.5], LABELS = { ru: ['0', '225 мкм', '450 мкм', '675 мкм'], en: ['0', '225 µm', '450 µm', '675 µm'] };
+  var NP = DEPTHS.length, DZ = 3.5;
   var planes = [];
   (function build() {
     var FST = 9.2, MST = 4.6, RR = R0 * .935;
@@ -90,7 +93,7 @@
       var off = d % 2 ? .5 : 0, field = [], mark = [];
       for (var i = -30; i <= 30; i++) for (var j = -30; j <= 30; j++) {
         var x = (i + off) * FST, y = (j + off) * FST;
-        if (x * x + y * y < RR * RR && y > FLAT_Y + 12 && !inMark(x, y)) field.push(x, y);
+        if (x * x + y * y < RR * RR && !inMark(x, y)) field.push(x, y);
       }
       for (var i2 = -40; i2 <= 40; i2++) for (var j2 = -20; j2 <= 20; j2++) {
         var x2 = (i2 + off) * MST, y2 = (j2 + off) * MST;
@@ -131,13 +134,13 @@
     for (var e = 0; e < WEDGES.length; e++) {
       var E = WEDGES[e], nx = E[2] * cyw - E[3] * syw, ny = E[2] * syw + E[3] * cyw, m = rot((E[0][0] + E[1][0]) / 2, (E[0][1] + E[1][1]) / 2);
       if (nx * -m[0] + ny * (CAMY - m[1]) <= 0) continue;
-      faces.push([m[1], E[0], E[1], nx, ny]);
+      faces.push([m[1], E[0], E[1], nx, ny, Math.atan2((E[0][1] + E[1][1]) / 2, (E[0][0] + E[1][0]) / 2)]);
     }
     faces.sort(function (p, q) { return p[0] - q[0]; });
     for (var f = 0; f < faces.length; f++) {
       var F = faces[f], p1 = proj(F[1][0], F[1][1], z1), p2 = proj(F[2][0], F[2][1], z1), p3 = proj(F[2][0], F[2][1], z0), p4 = proj(F[1][0], F[1][1], z0);
       ctx.beginPath(); ctx.moveTo(p1[0], p1[1]); ctx.lineTo(p2[0], p2[1]); ctx.lineTo(p3[0], p3[1]); ctx.lineTo(p4[0], p4[1]); ctx.closePath();
-      ctx.fillStyle = ctx.strokeStyle = colorFn(lightOf(F[3], F[4])); ctx.fill(); ctx.lineWidth = .5; ctx.stroke();
+      ctx.fillStyle = ctx.strokeStyle = colorFn(lightOf(F[3], F[4]), F[5]); ctx.fill(); ctx.lineWidth = .5; ctx.stroke();
     }
   }
   // атом — маленький квадрат в плоскости пластины (укорочен по глубине, как всё в этой плоскости)
@@ -197,6 +200,8 @@
     var sw = seg(lt, 7.3, 9.7), beamOn = lt > 7.3 && lt < 9.7, bw = 34;
     var bpos = -R0 * 1.15 + sw * R0 * 2.3, bA = Math.sin(sw * Math.PI);
     var intro = first ? sm(seg(lt, 0, 1.1)) : 1;
+    // блик фирменного цвета обходит кромку за цикл (от левого переднего края, по направлению к свету)
+    var rimA = 2.2 + 6.2832 * lt / LOOP;
 
     yaw = -.03 + .07 * Math.sin(th); cyw = Math.cos(yaw); syw = Math.sin(yaw);
 
@@ -206,14 +211,14 @@
 
     // 1. мягкая тень на столе по направлению света
     for (var i = 5; i >= 0; i--) {
-      var kk = 1 + i * .02, off = 14 + i * 2.5;
+      var kk = 1 + i * .02, off = 10 + i * 2;
       ctx.fillStyle = 'rgba(0,0,0,' + (.05 + (5 - i) * .014) * intro + ')'; ctx.beginPath();
-      for (var j = 0; j < WPTS.length; j++) { var r0 = rot(WPTS[j][0] * kk, WPTS[j][1] * kk), pp = projW(r0[0] + SHADOW[0] * off, r0[1] + SHADOW[1] * off, -T - 14); j ? ctx.lineTo(pp[0], pp[1]) : ctx.moveTo(pp[0], pp[1]); }
+      for (var j = 0; j < WPTS.length; j++) { var r0 = rot(WPTS[j][0] * kk, WPTS[j][1] * kk), pp = projW(r0[0] + SHADOW[0] * off, r0[1] + SHADOW[1] * off, -T - 8); j ? ctx.lineTo(pp[0], pp[1]) : ctx.moveTo(pp[0], pp[1]); }
       ctx.closePath(); ctx.fill();
     }
     // 2. торец — тёмное стекло с фаской
-    sides(-T, -2, function (l) { return rgba(mix(shade([58, 60, 56], l * .9), DEEP, .12), 1); });
-    sides(-2, 0, function (l) { return rgba(shade([72, 72, 68], .95 + l * .4), 1); });
+    sides(-T, -1.5, function (l, a) { return rgba(mix(shade([62, 60, 57], l * .9), MINT, .38 * rimK(a, rimA) * intro), 1); });
+    sides(-1.5, 0, function (l, a) { return rgba(mix(shade([74, 72, 68], .95 + l * .4), MINT, .5 * rimK(a, rimA) * intro), 1); });
     // 3. толща под поверхностью
     var far = proj(0, -R0, 0), near = proj(0, R0, 0);
     var g = ctx.createLinearGradient(far[0], far[1], near[0], near[1]);
@@ -224,18 +229,22 @@
     ctx.save(); poly(WPTS, 0); ctx.clip();
     for (var d = NP - 1; d >= 0; d--) {
       var L = planes[d], z = L.z, f = Math.exp(-Math.pow((z - zf) / (DZ * .62), 2)), depthK = 1 - d * .12;
-      var F = L.field;
+      var F = L.field, litD = [];
       ctx.fillStyle = C_PAPER;
       for (var q = 0; q < F.length; q += 2) {
-        var lit = beamOn ? Math.exp(-Math.pow((F[q] * SN[0] + F[q + 1] * SN[1] - bpos + d * 9) / bw, 2)) * bA : 0;
-        dot(F[q], F[q + 1], z, 1.25 + .5 * lit, (.05 + .15 * f + .35 * lit) * depthK * intro);
+        var lit = beamOn ? Math.exp(-Math.pow((F[q] * SN[0] + F[q + 1] * SN[1] - bpos + d * 5) / bw, 2)) * bA : 0;
+        dot(F[q], F[q + 1], z, 1.25 + .5 * lit, (.05 + .15 * f + .12 * lit) * depthK * intro);
+        if (lit > .03) litD.push(F[q], F[q + 1], lit);
       }
+      // отсвет луча на атомах — мятный, поверх натурального цвета
+      ctx.fillStyle = C_MINT;
+      for (var q3 = 0; q3 < litD.length; q3 += 3) dot(litD[q3], litD[q3 + 1], z, 1.25 + .5 * litD[q3 + 2], .26 * litD[q3 + 2] * depthK * intro);
       // знак: резкий слой в фокусе, остальные — мягкие и крупнее (расфокус)
       var M = L.mark, crisp = f > .5;
       ctx.fillStyle = crisp ? C_HOT : C_MINT;
       var aM = (.24 + .9 * f + .2 * surf) * (1 - d * .05) * breathe * intro, wM = 1.35 + 1.4 * (1 - f);
       for (var q2 = 0; q2 < M.length; q2 += 2) {
-        var lit2 = beamOn ? Math.exp(-Math.pow((M[q2] * SN[0] + M[q2 + 1] * SN[1] - bpos + d * 9) / bw, 2)) * bA : 0;
+        var lit2 = beamOn ? Math.exp(-Math.pow((M[q2] * SN[0] + M[q2 + 1] * SN[1] - bpos + d * 5) / bw, 2)) * bA : 0;
         dot(M[q2], M[q2 + 1], z, wM + .6 * lit2, aM * (1 - .45 * (1 - f)) + .5 * lit2);
       }
       ctx.globalAlpha = 1;
@@ -257,7 +266,7 @@
     if (beamOn) {
       [[bw * 1.6, .03], [bw * .7, .05], [bw * .22, .07]].forEach(function (b) {
         var qd = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(function (k) { return [SN[0] * (bpos + k[1] * b[0]) + SLANT[0] * k[0] * R0 * 1.5, SN[1] * (bpos + k[1] * b[0]) + SLANT[1] * k[0] * R0 * 1.5]; });
-        poly(qd, 0); ctx.fillStyle = rgba(PAPER, b[1] * bA); ctx.fill();
+        poly(qd, 0); ctx.fillStyle = rgba(mix(PAPER, MINT, .45), b[1] * bA); ctx.fill();
       });
     }
     // 5. стекло: мягкий блик и френелевский отлив дальнего края
@@ -271,12 +280,11 @@
     poly(WPTS, 0); ctx.fillStyle = fg; ctx.fill();
     ctx.restore();
 
-    // 6. кромка и срез-ориентир
+    // 6. кромка и бегущий по ней мятный блик
     var eg = ctx.createLinearGradient(proj(-R0, 0, 0)[0], 0, proj(R0, 0, 0)[0], 0);
     eg.addColorStop(0, rgba(PAPER, .5)); eg.addColorStop(.5, rgba(PAPER, .18)); eg.addColorStop(1, rgba(PAPER, .1));
     ctx.strokeStyle = eg; ctx.lineWidth = 1; poly(WPTS, 0); ctx.stroke();
-    var fl = proj(WPTS[WPTS.length - 1][0], WPTS[WPTS.length - 1][1], 0), fr = proj(WPTS[0][0], WPTS[0][1], 0);
-    ctx.strokeStyle = rgba(MINT, .85); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(fl[0], fl[1]); ctx.lineTo(fr[0], fr[1]); ctx.stroke();
+    drawRim(rimA, intro);
 
     // 7. лупа: «восьмёрка» над пластиной, показывает решётку на глубине фокуса
     drawLoupe(th, zf, u, intro);
@@ -286,6 +294,27 @@
 
     ctx.globalAlpha = 1;
     if (running) raf = requestAnimationFrame(frame);
+  }
+
+  // сила мятного блика для точки кромки под углом a (блик — в rimA, ширина ~±25°)
+  function rimK(a, rimA) {
+    var d = Math.atan2(Math.sin(a - rimA), Math.cos(a - rimA));
+    return Math.exp(-Math.pow(d / .44, 2));
+  }
+  // блик по верхней кромке: тонкая линия с мягким ореолом, без неона
+  function drawRim(rimA, intro) {
+    ctx.save(); ctx.lineCap = 'round';
+    [[5, .07], [2.4, .16], [1.1, .7]].forEach(function (w) {
+      ctx.lineWidth = w[0];
+      for (var i = 0; i < WPTS.length; i++) {
+        var q = WPTS[(i + 1) % WPTS.length];
+        var a = Math.atan2((WPTS[i][1] + q[1]) / 2, (WPTS[i][0] + q[0]) / 2), k = rimK(a, rimA);
+        if (k < .02) continue;
+        var p1 = proj(WPTS[i][0], WPTS[i][1], 0), p2 = proj(q[0], q[1], 0);
+        ctx.strokeStyle = rgba(MINT, w[1] * k * intro); ctx.beginPath(); ctx.moveTo(p1[0], p1[1]); ctx.lineTo(p2[0], p2[1]); ctx.stroke();
+      }
+    });
+    ctx.restore();
   }
 
   function drawLoupe(th, zf, u, intro) {

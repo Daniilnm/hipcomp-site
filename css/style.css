@@ -1,11 +1,14 @@
 /* HipComp — главная страница
    Концепция: «срез пластины». Тёплый графит как основа, мята только как сигнал
    (знак, действия, активные состояния). Наклон 59° из знака HC повторяется
-   в кнопках, прорезях и разделителях. Тексты — IBM Plex Sans, формулы и логотип — Archivo 600,
-   параметры и спецификации — IBM Plex Mono. */
+   в кнопках, прорезях и разделителях. Тексты — IBM Plex Sans, формулы — Archivo 600,
+   параметры и спецификации — IBM Plex Mono. Логотип — Manrope Light с мягким утолщением (SVG в кривых),
+   первый экран — Manrope: слоган Light, пояснение Regular. */
 
 /* ---------- Шрифты (OFL, локально) ---------- */
 @font-face{font-family:"Archivo";src:url(../assets/fonts/Archivo-600-latin.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"Manrope";src:url(../assets/fonts/Manrope-var-cyrillic.woff2) format("woff2");font-weight:300 500;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Manrope";src:url(../assets/fonts/Manrope-var-latin.woff2) format("woff2");font-weight:300 500;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 @font-face{font-family:"IBM Plex Sans";src:url(../assets/fonts/IBMPlexSans-cyrillic.woff2) format("woff2");font-weight:400 600;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
 @font-face{font-family:"IBM Plex Sans";src:url(../assets/fonts/IBMPlexSans-latin.woff2) format("woff2");font-weight:400 600;font-display:swap;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 @font-face{font-family:"IBM Plex Mono";src:url(../assets/fonts/IBMPlexMono-400-cyrillic.woff2) format("woff2");font-weight:400;font-display:swap;unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
@@ -35,6 +38,7 @@
   --f-sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   --f-logo:"Archivo","IBM Plex Sans",system-ui,sans-serif;
+  --f-brand:"Manrope","IBM Plex Sans",system-ui,sans-serif;
 
   /* шкала */
   --fs-h1:clamp(40px,5.1vw,78px);
@@ -106,6 +110,7 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
 .logo__tag{font:400 13px/1 var(--f-sans);letter-spacing:0;color:var(--muted);margin-top:2px;max-height:20px;overflow:hidden;transition:opacity .3s,max-height .35s var(--ease),margin .35s var(--ease)}
 .hdr.is-stuck .logo__mark{width:46px;height:20px}
 .hdr.is-stuck .logo__tag{opacity:0;max-height:0;margin-top:0}
+.logo__img{width:auto;height:30px}
 
 .nav{display:flex;align-items:center;gap:clamp(14px,2vw,34px);margin-left:auto}
 .nav__a{position:relative;display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:500;text-decoration:none;color:var(--paper);padding:10px 0;white-space:nowrap}
@@ -117,6 +122,8 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
 .icon-btn{position:relative;display:grid;place-items:center;width:44px;height:44px;color:var(--paper);transition:color .2s}
 .icon-btn svg{width:22px;height:22px}
 .icon-btn:hover{color:var(--mint)}
+.icon-btn--search,.fsearch{color:var(--mint)}
+.icon-btn--search:hover,.fsearch:hover{color:#B5F0DA}
 .lang{display:inline-flex;align-items:center;height:44px;padding:0 4px;font:500 12px/1 var(--f-mono);letter-spacing:.08em;color:var(--faint);gap:2px}
 .lang span{padding:6px 5px}
 .lang span[aria-current]{color:var(--paper);box-shadow:inset 0 -1px 0 var(--mint)}
@@ -142,31 +149,60 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
 .mnav__tel{font-size:16px;color:var(--muted);text-decoration:none;padding:12px 0}
 
 /* ---------- 01 Первый экран ---------- */
+/* последовательность: логотип (кто мы) → слоган (ценность) → пояснение (как обеспечиваем) → «Загрузить BOM» */
 .hero{position:relative;padding-bottom:clamp(40px,5vw,72px);padding-top:calc(var(--hdr) + env(safe-area-inset-top,0px) + clamp(24px,4vw,56px));overflow:hidden;
   background:var(--graphite)}
-.hero__in{display:grid;grid-template-columns:minmax(0,4.4fr) minmax(0,7.6fr);align-items:center;gap:clamp(24px,4vw,64px);min-height:min(720px,calc(100svh - 110px))}
-.hero__copy{display:flex;flex-direction:column;gap:24px;position:relative;z-index:2;padding-bottom:24px}
-.hero__h{font-size:var(--fs-h1);font-weight:600;line-height:1.02;letter-spacing:-.028em;text-wrap:balance}
-.hero__sub{font-size:var(--fs-lead);color:var(--muted);max-width:30ch;line-height:1.45}
-.hero__cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:12px}
+.hero__in{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center;gap:clamp(24px,4vw,64px);min-height:min(720px,calc(100svh - 110px))}
+.hero__copy{display:flex;flex-direction:column;gap:20px;position:relative;z-index:2;padding-bottom:24px}
+.hero__title{display:flex;flex-direction:column;align-items:flex-start;gap:clamp(40px,7vh,96px);margin:0;font:inherit}
+/* десктоп: логотип вынесен в левый верхний угол экрана, а слоган, пояснение и кнопка
+   стоят по центру пластины по высоте (оптический центр пластины — 47 % высоты её области) */
+@media (min-width:1081px){
+  .hero__in{position:relative}
+  .hero__title{gap:0}
+  .hero__copy{position:static}
+  .hero__logo{position:absolute;top:0;left:var(--gut)}
+}
+.hero__logo{width:min(100%,440px);height:auto}
+.hero__h{font:300 clamp(26px,2.45vw,38px)/1.2 var(--f-brand);letter-spacing:-.005em;color:var(--mint);text-wrap:balance;max-width:22ch}
+.hero__sub{font:400 clamp(17px,1.3vw,20px)/1.5 var(--f-brand);color:var(--paper);max-width:31ch}
+.hero__cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
 .hero__vis{position:relative;aspect-ratio:1.12/1;width:calc(100% + clamp(0px,4vw,64px));max-height:760px;margin-right:calc(-1 * clamp(0px,4vw,64px))}
 .hero__vis canvas{width:100%;height:100%}
-/* десктоп: первый экран = окно минус шапка, композиция по центру видимой области */
+/* десктоп: шапка не закреплена и уезжает вместе со страницей; крупный логотип — в левом верхнем углу экрана,
+   на одной высоте с меню; пластина — по центру оставшейся области */
 @media (min-width:1081px){
-  .hero{padding-top:calc(var(--hdr) + env(safe-area-inset-top,0px))}
-  .hero__in{height:calc(100svh - var(--hdr) - env(safe-area-inset-top,0px));min-height:540px}
-  .hero__vis{aspect-ratio:auto;height:calc(100% - 24px);max-height:none}
+  :root{--hdr:132px}
+  .hdr{position:absolute}
+  .hdr .logo--hdr{display:none}
+  .hdr.is-stuck{background:none;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+  .hdr.is-stuck .hdr__in{height:var(--hdr)}
+  .hero{padding-top:calc(28px + env(safe-area-inset-top,0px))}
+  .hero__in{height:calc(100svh - 28px - env(safe-area-inset-top,0px));min-height:600px;align-items:stretch}
+  .hero__copy{justify-content:center;margin-top:calc(var(--hdr) - 52px);padding-bottom:calc((100svh - var(--hdr) + 24px) * .06)}
+  .hero__vis{aspect-ratio:auto;height:auto;max-height:none;margin-top:calc(var(--hdr) - 52px)}
 }
 .hero__cap{position:absolute;left:45%;top:88%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;font-size:var(--fs-small);color:var(--muted);white-space:nowrap}
 .hero__cap-dot{width:7px;height:7px;background:var(--mint);transform:skewX(-31deg)}
 
-/* появление первого экрана */
+/* лупа, которая сопровождает прокрутку (десктоп): появляется, когда шапка уехала */
+.fsearch{position:fixed;top:calc(20px + env(safe-area-inset-top,0px));right:max(24px,calc((100vw - var(--wrap) - 80px) / 2 + 28px));z-index:41;display:grid;place-items:center;width:52px;height:52px;
+  background:rgba(37,36,34,.82);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:inset 0 0 0 1px var(--line-s);
+  clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  opacity:0;visibility:hidden;transform:translateY(-10px);transition:opacity .35s var(--ease),transform .35s var(--ease),visibility 0s .35s,color .2s}
+.fsearch svg{width:22px;height:22px}
+.is-past-hdr .fsearch{opacity:1;visibility:visible;transform:none;transition:opacity .35s var(--ease),transform .35s var(--ease),visibility 0s,color .2s}
+/* телефон: та же лупа, чуть компактнее */
+@media (max-width:1080px){ .fsearch{width:48px;height:48px;top:calc(10px + env(safe-area-inset-top,0px))} }
+
+/* появление первого экрана: логотип, затем слоган, пояснение и кнопка */
 @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.js .hero__copy>*{animation:rise .9s var(--ease) both}
-.js .hero__copy>:nth-child(1){animation-delay:.2s}
-.js .hero__copy>:nth-child(2){animation-delay:.35s}
-.js .hero__copy>:nth-child(3){animation-delay:.55s}
+.js .hero__logo,.js .hero__h,.js .hero__sub,.js .hero__cta{animation:rise .9s var(--ease) both}
+.js .hero__logo{animation-delay:.15s}
+.js .hero__h{animation-delay:.45s}
+.js .hero__sub{animation-delay:.6s}
+.js .hero__cta{animation-delay:.75s}
 .js .hero__vis{animation:fadeIn 1.4s .15s ease both}
 
 
@@ -388,6 +424,12 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
   .nav{gap:20px}
 }
 @media (max-width:1080px){
+  .logo__img{height:38px}
+  /* шапка не закреплена — уезжает вместе со страницей, как на ПК */
+  .hdr{position:absolute}
+  .hdr.is-stuck:not(.is-menu){background:none;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none}
+  .hdr.is-stuck .hdr__in{height:var(--hdr)}
+  .hero__logo{display:none}
   .nav{display:none}
   .burger{display:block}
   .hdr__tools{margin-left:auto}
@@ -412,9 +454,9 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
 }
 @media (max-width:720px){
   :root{--hdr:68px;--fs-body:16px}
-  .hdr.is-stuck .hdr__in{height:60px}
   .logo__mark{width:46px;height:20px}
   .logo__name{font-size:23px}
+  .logo__img{height:34px}
   .hero{padding-top:calc(var(--hdr) + env(safe-area-inset-top,0px) + 20px)}
   .hero__copy{gap:18px}
   .hero__vis{aspect-ratio:1/0.8;margin-inline:calc(-1 * var(--gut)) calc(-1 * var(--gut-r));width:auto}
@@ -436,9 +478,8 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
   /* телефон: блоки идут друг под другом и входят в экран по одному — без лесенки задержек, короче и ближе */
   .js [data-reveal]{--rv-x:-24px;transform:translateX(-24px);transition-duration:.7s;transition-delay:0s;transition-timing-function:cubic-bezier(.22,.61,.36,1)}
   @supports (animation-timeline: view()){ .js [data-reveal]{transform:none;animation-range:cover 12% cover 32%} }
-  .actbar__b{display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;font-size:16px;font-weight:500;text-decoration:none;border:1px solid var(--line-s)}
-  .actbar__b svg{width:20px;height:20px}
-  .actbar__b--mint{background:var(--mint);border-color:var(--mint);color:var(--ink)}
+  .actbar__b{min-height:50px;padding:0 16px;gap:8px}
+  .actbar .btn--line::before{background:#252422}
   .dlg[open]{place-items:end stretch;padding:0;padding-top:env(safe-area-inset-top,0px)}
   .dlg__box{width:100%;clip-path:polygon(20px 0,100% 0,100% 100%,0 100%,0 20px);padding:28px var(--gut-r) calc(28px + env(safe-area-inset-bottom,0px)) var(--gut);animation:sheetIn .45s var(--ease)}
   .dlg--search[open]{padding:0}
@@ -468,8 +509,8 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
 .card.is-hit{animation:hit 1.6s var(--ease) 2;border-color:var(--mint-deep)}
 .hdr.is-menu{background:var(--graphite-d);box-shadow:0 1px 0 var(--line)}
 
-/* телефон: центральное изображение над заголовком */
+/* телефон: логотип → слоган → пояснение → кнопка, пластина ниже */
 @media (max-width:720px){
-  .hero__vis{order:-1;aspect-ratio:1/.74;margin-top:-8px}
+  .hero__vis{aspect-ratio:1/.74;margin-top:8px}
   .hero__copy{padding-top:4px}
 }

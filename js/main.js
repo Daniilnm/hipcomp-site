@@ -45,7 +45,22 @@
 
   /* ---------- Шапка ---------- */
   var hdr = $('#hdr');
-  function onScroll() { hdr.classList.toggle('is-stuck', window.scrollY > 12); }
+  // шапка уезжает вместе со страницей, а лупа отделяется и сопровождает прокрутку — на ПК и на телефоне (ориентир — quanttelecom.ru)
+  function onScroll() {
+    var y = window.scrollY;
+    if (y > 12 && !root.classList.contains('is-past-hdr')) placeSearch();
+    hdr.classList.toggle('is-stuck', y > 12);
+    root.classList.toggle('is-past-hdr', y > hdr.offsetHeight * .6);
+  }
+  // плавающая лупа встаёт по одной вертикали с лупой в шапке — будто та продолжает путь вместе с прокруткой
+  var fsearch = $('#fsearch'), hsearch = $('.hdr__tools [data-open="search"]');
+  function placeSearch() {
+    if (!fsearch || !hsearch) return;
+    var r = hsearch.getBoundingClientRect();
+    fsearch.style.left = Math.round(r.left + r.width / 2 - fsearch.offsetWidth / 2) + 'px';
+    fsearch.style.right = 'auto';
+  }
+  window.addEventListener('resize', placeSearch); placeSearch();
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
   // активный пункт меню
