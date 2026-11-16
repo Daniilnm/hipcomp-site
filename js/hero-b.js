@@ -3,25 +3,29 @@
    Знак HC (малая форма) — не наклейка, а объём внутри материала: его точки есть
    на каждой глубине. Знак виден весь цикл.
    Цикл 10 с, без сброса:
-   — плоскость фокуса уходит с поверхности вглубь (0 → 500 µm) и возвращается, шкала справа
-     показывает глубину; резкий слой знака — тот, что в фокусе, остальные размыты;
+   — плоскость фокуса уходит с поверхности вглубь и возвращается;
+     резкий слой знака — тот, что в фокусе, остальные размыты;
    — по пластине по замкнутой «восьмёрке» плывёт лупа и показывает атомы на глубине фокуса;
    — когда фокус возвращается на поверхность, вдоль косого среза знака проходит луч
      и знак светится изнутри — затем фокус снова уходит вглубь.
    Одна перспективная камера, один источник света, все окружности и тени — в проекции.
    Цвет самой пластины натуральный (тёмное стекло, нейтральный торец); фирменный салатно-мятный
    появляется только в свете: блик, который обходит кромку за цикл, отсвет на торце под ним,
-   мятный луч по срезу знака и свечение знака изнутри. */
+   мятный луч по срезу знака и свечение знака изнутри.
+   Свет на всём цикле: у решётки нижний порог яркости, знак мягко светится всегда,
+   по поверхности медленно гуляют два мягких световых пятна (тёплое из светлого тёплого и едва
+   мятное), по стеклу проходит тёплый блик. Вид чуть сверху — пластина читается кругом.
+   Подписи и шкалы нет: это художественный образ, а не техническая демонстрация. */
 (function () {
   'use strict';
   var canvas = document.getElementById('stack');
   if (!canvas || !canvas.getContext) return;
   var ctx = canvas.getContext('2d');
-  var cap = document.getElementById('stack-cap');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
   var FREEZE = parseFloat(new URLSearchParams(location.search).get('frame'));
 
   var PAPER = [243, 241, 234], MINT = [131, 224, 190], GRAPH = [45, 44, 42];
+  var WARM = PAPER; // тёплый блик — фирменный светлый тёплый #F3F1EA, без нового цвета
   var C_PAPER = '#F3F1EA', C_MINT = '#83E0BE', C_HOT = '#C9F2E2';
   function rgba(c, a) { return 'rgba(' + (c[0] | 0) + ',' + (c[1] | 0) + ',' + (c[2] | 0) + ',' + a + ')'; }
   function mix(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }
@@ -82,9 +86,8 @@
     return edges;
   }
 
-  // ---- плоскости решётки: поверхность и три глубины (подписи шкалы) ----
-  // плоскости идут через равные шаги, поэтому и шкала линейная: толщина пластины Si Ø150 мм по SEMI M1 — 675 мкм
-  var DEPTHS = [-1, -4.5, -8, -11.5], LABELS = { ru: ['0', '225 мкм', '450 мкм', '675 мкм'], en: ['0', '225 µm', '450 µm', '675 µm'] };
+  // ---- плоскости решётки: поверхность и три глубины через равные шаги ----
+  var DEPTHS = [-1, -4.5, -8, -11.5];
   var NP = DEPTHS.length, DZ = 3.5;
   var planes = [];
   (function build() {
@@ -107,7 +110,7 @@
   // один источник света: слева, спереди, сверху (x вправо, y к зрителю, z вверх)
   var LIGHT = (function () { var v = [-.5, .55, .67], l = Math.hypot(v[0], v[1], v[2]); return [v[0] / l, v[1] / l, v[2] / l]; })();
   var SHADOW = [-LIGHT[0] / LIGHT[2], -LIGHT[1] / LIGHT[2]];
-  var LOOP = 10, P = 50 * Math.PI / 180, cosP = Math.cos(P), sinP = Math.sin(P), CAM = 2400;
+  var LOOP = 10, P = 44 * Math.PI / 180, cosP = Math.cos(P), sinP = Math.sin(P), CAM = 2400;
   var CAMY = CAM * sinP, CAMZ = CAM * cosP;
 
   var W = 0, H = 0, dpr = 1, s = 1, cx = 0, cy = 0, narrow = false;
@@ -162,16 +165,10 @@
     s = 1; cx = 0; cy = 0; yaw = 0; cyw = 1; syw = 0;
     var x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
     WPTS.forEach(function (p) { [0, -T].forEach(function (z) { var q = projW(p[0], p[1], z); x0 = Math.min(x0, q[0]); x1 = Math.max(x1, q[0]); y0 = Math.min(y0, q[1]); y1 = Math.max(y1, q[1]); }); });
-    var CX = narrow ? .5 : .44;
-    s = Math.min(W * (narrow ? .9 : .82) / (x1 - x0), H * (narrow ? .8 : .78) / (y1 - y0));
+    var CX = narrow ? .5 : .46;
+    s = Math.min(W * (narrow ? .9 : .84) / (x1 - x0), H * (narrow ? .84 : .8) / (y1 - y0));
     cx = W * CX - (x0 + x1) / 2 * s;
-    cy = H * (narrow ? .5 : .47) - (y0 + y1) / 2 * s; // чуть выше центра: под пластиной ещё подпись
-    // подпись — по центру пластины и на постоянном расстоянии под её нижней кромкой
-    var fc = canvas.parentNode.querySelector('.hero__cap');
-    if (fc) {
-      fc.style.left = (W * CX) + 'px';
-      fc.style.top = Math.min(H - 20, y1 * s + cy + (narrow ? 20 : 36)) + 'px';
-    }
+    cy = H * .5 - (y0 + y1) / 2 * s;
     if (!running) frame(performance.now());
   }
 
@@ -189,8 +186,6 @@
     if (reduce.matches) t = 8.9;
     if (FREEZE >= 0) t = FREEZE;
     var lt = t % LOOP, first = t < LOOP && !(FREEZE >= 0) && !reduce.matches;
-    var en = document.documentElement.lang === 'en';
-    if (cap) { var c = en ? 'Si (100) wafer, Ø\u00a0150\u00a0mm' : 'Пластина Si (100), Ø\u00a0150\u00a0мм'; if (cap.textContent !== c) cap.textContent = c; }
 
     var th = 6.2832 * lt / LOOP;
     var u = focusAt(lt), zf = DEPTHS[0] + (DEPTHS[NP - 1] - DEPTHS[0]) * u;
@@ -222,7 +217,7 @@
     // 3. толща под поверхностью
     var far = proj(0, -R0, 0), near = proj(0, R0, 0);
     var g = ctx.createLinearGradient(far[0], far[1], near[0], near[1]);
-    g.addColorStop(0, '#2e2e2c'); g.addColorStop(1, '#171716');
+    g.addColorStop(0, '#3a3935'); g.addColorStop(.55, '#272623'); g.addColorStop(1, '#1d1c1a');
     poly(WPTS, 0); ctx.fillStyle = g; ctx.fill();
 
     // 4. плоскости решётки, от глубоких к поверхности
@@ -233,7 +228,7 @@
       ctx.fillStyle = C_PAPER;
       for (var q = 0; q < F.length; q += 2) {
         var lit = beamOn ? Math.exp(-Math.pow((F[q] * SN[0] + F[q + 1] * SN[1] - bpos + d * 5) / bw, 2)) * bA : 0;
-        dot(F[q], F[q + 1], z, 1.25 + .5 * lit, (.05 + .15 * f + .12 * lit) * depthK * intro);
+        dot(F[q], F[q + 1], z, 1.25 + .5 * lit, (.1 + .13 * f + .12 * lit) * depthK * intro);
         if (lit > .03) litD.push(F[q], F[q + 1], lit);
       }
       // отсвет луча на атомах — мятный, поверх натурального цвета
@@ -242,22 +237,20 @@
       // знак: резкий слой в фокусе, остальные — мягкие и крупнее (расфокус)
       var M = L.mark, crisp = f > .5;
       ctx.fillStyle = crisp ? C_HOT : C_MINT;
-      var aM = (.24 + .9 * f + .2 * surf) * (1 - d * .05) * breathe * intro, wM = 1.35 + 1.4 * (1 - f);
+      var aM = (.36 + .8 * f + .2 * surf) * (1 - d * .05) * breathe * intro, wM = 1.35 + 1.4 * (1 - f);
       for (var q2 = 0; q2 < M.length; q2 += 2) {
         var lit2 = beamOn ? Math.exp(-Math.pow((M[q2] * SN[0] + M[q2 + 1] * SN[1] - bpos + d * 5) / bw, 2)) * bA : 0;
         dot(M[q2], M[q2 + 1], z, wM + .6 * lit2, aM * (1 - .45 * (1 - f)) + .5 * lit2);
       }
       ctx.globalAlpha = 1;
       // мутность стекла между плоскостями — глубина
-      if (d > 0) { poly(WPTS, z + DZ / 2); ctx.fillStyle = 'rgba(23,23,22,' + .1 * intro + ')'; ctx.fill(); }
+      if (d > 0) { poly(WPTS, z + DZ / 2); ctx.fillStyle = 'rgba(23,23,22,' + .055 * intro + ')'; ctx.fill(); }
     }
     ctx.globalAlpha = intro;
-    // знак светится изнутри, когда фокус у поверхности
-    if (surf > .01) {
-      ctx.shadowColor = rgba(MINT, .7); ctx.shadowBlur = 22 * s * dpr;
-      markPath(DEPTHS[0]); ctx.fillStyle = rgba(MINT, .16 * surf * breathe); ctx.fill();
-      ctx.shadowBlur = 0;
-    }
+    // знак мягко светится изнутри весь цикл, ярче — когда фокус у поверхности
+    ctx.shadowColor = rgba(MINT, .55); ctx.shadowBlur = 20 * s * dpr;
+    markPath(zf); ctx.fillStyle = rgba(MINT, (.06 + .1 * surf) * breathe * intro); ctx.fill();
+    ctx.shadowBlur = 0;
     // срез знака на глубине фокуса и плоскость фокуса
     ctx.lineWidth = 1;
     markPath(zf); ctx.strokeStyle = rgba(MINT, .7 + .2 * surf); ctx.stroke();
@@ -269,31 +262,41 @@
         poly(qd, 0); ctx.fillStyle = rgba(mix(PAPER, MINT, .45), b[1] * bA); ctx.fill();
       });
     }
-    // 5. стекло: мягкий блик и френелевский отлив дальнего края
-    var dir = [.62, .78], nrm = [-dir[1], dir[0]], c0 = [-R0 * .3, -R0 * .1];
-    [[52, .014], [16, .024]].forEach(function (b) {
+    // 5. свет по всей поверхности: два медленных мягких пятна (тёплое и едва мятное)
+    glow(R0 * .52 * Math.cos(th + .6), R0 * .42 * Math.sin(2 * th + .6), R0 * .62, WARM, .085 * intro);
+    glow(R0 * .55 * Math.cos(th + 3.4), R0 * .45 * Math.sin(2 * th + 3.9), R0 * .5, MINT, .035 * intro);
+    // стекло: тёплый блик медленно проходит по поверхности за цикл; френелевский отлив дальнего края
+    var dir = [.62, .78], nrm = [-dir[1], dir[0]], sh = Math.sin(th - .8), c0 = [-R0 * .3 + nrm[0] * sh * R0 * .55, -R0 * .1 + nrm[1] * sh * R0 * .55];
+    [[60, .02], [26, .035], [9, .04]].forEach(function (b) {
       poly([[-1.6, -1], [1.6, -1], [1.6, 1], [-1.6, 1]].map(function (k) { return [c0[0] + dir[0] * k[0] * R0 + nrm[0] * k[1] * b[0], c0[1] + dir[1] * k[0] * R0 + nrm[1] * k[1] * b[0]]; }), 0);
-      ctx.fillStyle = rgba(PAPER, b[1]); ctx.fill();
+      ctx.fillStyle = rgba(WARM, b[1] * intro); ctx.fill();
     });
     var fg = ctx.createLinearGradient(far[0], far[1], near[0], near[1]);
-    fg.addColorStop(0, rgba(PAPER, .07)); fg.addColorStop(.35, rgba(PAPER, 0));
+    fg.addColorStop(0, rgba(PAPER, .09)); fg.addColorStop(.4, rgba(PAPER, 0));
     poly(WPTS, 0); ctx.fillStyle = fg; ctx.fill();
     ctx.restore();
 
     // 6. кромка и бегущий по ней мятный блик
     var eg = ctx.createLinearGradient(proj(-R0, 0, 0)[0], 0, proj(R0, 0, 0)[0], 0);
-    eg.addColorStop(0, rgba(PAPER, .5)); eg.addColorStop(.5, rgba(PAPER, .18)); eg.addColorStop(1, rgba(PAPER, .1));
-    ctx.strokeStyle = eg; ctx.lineWidth = 1; poly(WPTS, 0); ctx.stroke();
+    eg.addColorStop(0, rgba(PAPER, .62)); eg.addColorStop(.5, rgba(PAPER, .3)); eg.addColorStop(1, rgba(PAPER, .2));
+    ctx.strokeStyle = eg; ctx.lineWidth = 1.2; poly(WPTS, 0); ctx.stroke();
+    ctx.strokeStyle = rgba(PAPER, .07 * intro); ctx.lineWidth = 1; poly(WPTS, 0, .975); ctx.stroke();
     drawRim(rimA, intro);
 
     // 7. лупа: «восьмёрка» над пластиной, показывает решётку на глубине фокуса
     drawLoupe(th, zf, u, intro);
 
-    // 8. шкала глубины справа, связанная с плоскостью фокуса
-    drawScale(u, zf, intro, en);
-
     ctx.globalAlpha = 1;
     if (running) raf = requestAnimationFrame(frame);
+  }
+
+  // мягкое световое пятно в плоскости пластины (радиальный градиент, сжатый по глубине как сама плоскость)
+  function glow(x, y, r, col, a) {
+    var p = proj(x, y, 0), rr = r * p[2];
+    ctx.save(); ctx.translate(p[0], p[1]); ctx.scale(1, cosP);
+    var gr = ctx.createRadialGradient(0, 0, 0, 0, 0, rr);
+    gr.addColorStop(0, rgba(col, a)); gr.addColorStop(.55, rgba(col, a * .4)); gr.addColorStop(1, rgba(col, 0));
+    ctx.fillStyle = gr; ctx.fillRect(-rr, -rr, rr * 2, rr * 2); ctx.restore();
   }
 
   // сила мятного блика для точки кромки под углом a (блик — в rimA, ширина ~±25°)
@@ -355,29 +358,6 @@
     // оправа: тонкое кольцо с толщиной, верх светлее
     for (var h = 0; h <= 4; h++) { circle(C, RL, HL - 4 + h); ctx.strokeStyle = h === 4 ? rgba(PAPER, .7 * intro) : rgba(GRAPH, .95 * intro); ctx.lineWidth = h === 4 ? 1.2 : 1.6; ctx.stroke(); }
     circle(C, RL + 1.6, HL); ctx.strokeStyle = rgba(MINT, .35 * intro); ctx.lineWidth = 1; ctx.stroke();
-  }
-
-  function drawScale(u, zf, intro, en) {
-    var labels = LABELS[en ? 'en' : 'ru'];
-    var ang = .3, ex = R0 * Math.cos(ang), ey = R0 * Math.sin(ang);
-    var e0 = proj(ex, ey, DEPTHS[0]), xs = Math.max(proj(R0, 0, 0)[0], e0[0]) + (narrow ? 14 : 30);
-    if (xs + (narrow ? 44 : 64) > W) return;
-    var gap = narrow ? 15 : 22, y0 = e0[1] - gap * .5;
-    ctx.globalAlpha = intro; ctx.lineWidth = 1;
-    ctx.strokeStyle = rgba(PAPER, .22); ctx.beginPath(); ctx.moveTo(xs + .5, y0); ctx.lineTo(xs + .5, y0 + gap * (NP - 1)); ctx.stroke();
-    ctx.font = (narrow ? '500 9px ' : '500 11px ') + '"IBM Plex Mono", ui-monospace, monospace'; ctx.textBaseline = 'middle';
-    var pos = u * (NP - 1);
-    for (var k = 0; k < NP; k++) {
-      var ly = y0 + k * gap, on = clamp(1 - Math.abs(pos - k) * 1.6);
-      ctx.fillStyle = rgba(PAPER, .3 + .2 * on); ctx.fillRect(xs - 3, ly - .5, 6, 1);
-      ctx.fillStyle = rgba(mix(PAPER, MINT, on * .3), .4 + .55 * on); ctx.fillText(labels[k], xs + 12, ly);
-    }
-    // указатель фокуса и выноска к кромке пластины на той же глубине
-    var iy = y0 + pos * gap, ep = proj(ex, ey, zf);
-    ctx.strokeStyle = rgba(MINT, .5); ctx.setLineDash([2, 3]);
-    ctx.beginPath(); ctx.moveTo(ep[0] + 3, ep[1]); ctx.lineTo(xs - 6, iy); ctx.stroke(); ctx.setLineDash([]);
-    ctx.fillStyle = C_MINT; ctx.fillRect(xs - 4, iy - 1, 9, 2);
-    ctx.globalAlpha = 1;
   }
 
   function start() {

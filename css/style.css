@@ -118,6 +118,11 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
 .nav a.nav__a::after,.nav__btn::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:1px;background:var(--mint);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
 .nav a.nav__a:hover::after,.nav__btn:hover::after,.nav a.nav__a[aria-current]::after{transform:scaleX(1)}
 .nav__btn:hover svg{color:var(--mint)}
+/* раздел готовится: пункт неактивный, над названием мятная пометка «скоро» */
+.nav__soon{color:var(--muted);cursor:default}
+.soon{position:absolute;left:0;top:-5px;font:500 10px/1 var(--f-mono);letter-spacing:.08em;text-transform:lowercase;color:var(--mint);pointer-events:none}
+.mnav__soon{color:var(--muted)}
+.mnav__soon .soon{top:8px;font-size:11px}
 .hdr__tools{display:flex;align-items:center;gap:6px}
 .icon-btn{position:relative;display:grid;place-items:center;width:44px;height:44px;color:var(--paper);transition:color .2s}
 .icon-btn svg{width:22px;height:22px}
@@ -162,11 +167,20 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
   .hero__title{gap:0}
   .hero__copy{position:static}
   .hero__logo{position:absolute;top:0;left:var(--gut)}
+  .hero .hero__logo{width:clamp(300px,calc(100vw - 920px),440px)}
 }
+/* узкий десктоп: меню во всю строку, логотип — под ней, чтобы не наезжал на пункты */
+@media (min-width:1081px) and (max-width:1199px){ .hero__logo{top:calc(var(--hdr) - 36px)} }
 .hero__logo{width:min(100%,440px);height:auto}
-.hero__h{font:300 clamp(26px,2.45vw,38px)/1.2 var(--f-brand);letter-spacing:-.005em;color:var(--mint);text-wrap:balance;max-width:22ch}
-.hero__sub{font:400 clamp(17px,1.3vw,20px)/1.5 var(--f-brand);color:var(--paper);max-width:31ch}
-.hero__cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+/* слоган всегда в одну строку: кегль по ширине колонки (строка ≈ 15,3 кегля) */
+.hero__h{font:300 min(44px,calc((100vw - var(--gut) - var(--gut-r)) / 15.5))/1.15 var(--f-brand);letter-spacing:-.01em;color:var(--mint);white-space:nowrap}
+/* пояснение отделено от слогана — у слогана своя смысловая пауза */
+.hero__sub{font:400 clamp(17px,1.3vw,20px)/1.5 var(--f-brand);color:var(--paper);max-width:31ch;margin-top:clamp(12px,2.6vw,36px)}
+/* десктоп: колонка текста шире, чтобы слоган шёл одной строкой крупно */
+@media (min-width:1081px){
+  .hero__in{grid-template-columns:minmax(0,6.4fr) minmax(0,5.6fr)}
+  .hero__h{font-size:clamp(26px,3.05vw,43px)}
+}
 .hero__vis{position:relative;aspect-ratio:1.12/1;width:calc(100% + clamp(0px,4vw,64px));max-height:760px;margin-right:calc(-1 * clamp(0px,4vw,64px))}
 .hero__vis canvas{width:100%;height:100%}
 /* десктоп: шапка не закреплена и уезжает вместе со страницей; крупный логотип — в левом верхнем углу экрана,
@@ -179,11 +193,9 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
   .hdr.is-stuck .hdr__in{height:var(--hdr)}
   .hero{padding-top:calc(28px + env(safe-area-inset-top,0px))}
   .hero__in{height:calc(100svh - 28px - env(safe-area-inset-top,0px));min-height:600px;align-items:stretch}
-  .hero__copy{justify-content:center;margin-top:calc(var(--hdr) - 52px);padding-bottom:calc((100svh - var(--hdr) + 24px) * .06)}
+  .hero__copy{justify-content:center;margin-top:calc(var(--hdr) - 52px);padding-bottom:0}
   .hero__vis{aspect-ratio:auto;height:auto;max-height:none;margin-top:calc(var(--hdr) - 52px)}
 }
-.hero__cap{position:absolute;left:45%;top:88%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;font-size:var(--fs-small);color:var(--muted);white-space:nowrap}
-.hero__cap-dot{width:7px;height:7px;background:var(--mint);transform:skewX(-31deg)}
 
 /* лупа, которая сопровождает прокрутку (десктоп): появляется, когда шапка уехала */
 .fsearch{position:fixed;top:calc(20px + env(safe-area-inset-top,0px));right:max(24px,calc((100vw - var(--wrap) - 80px) / 2 + 28px));z-index:41;display:grid;place-items:center;width:52px;height:52px;
@@ -195,14 +207,13 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
 /* телефон: та же лупа, чуть компактнее */
 @media (max-width:1080px){ .fsearch{width:48px;height:48px;top:calc(10px + env(safe-area-inset-top,0px))} }
 
-/* появление первого экрана: логотип, затем слоган, пояснение и кнопка */
+/* появление первого экрана: логотип, затем слоган и пояснение */
 @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.js .hero__logo,.js .hero__h,.js .hero__sub,.js .hero__cta{animation:rise .9s var(--ease) both}
+.js .hero__logo,.js .hero__h,.js .hero__sub{animation:rise .9s var(--ease) both}
 .js .hero__logo{animation-delay:.15s}
 .js .hero__h{animation-delay:.45s}
 .js .hero__sub{animation-delay:.6s}
-.js .hero__cta{animation-delay:.75s}
 .js .hero__vis{animation:fadeIn 1.4s .15s ease both}
 
 
@@ -460,8 +471,6 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
   .hero{padding-top:calc(var(--hdr) + env(safe-area-inset-top,0px) + 20px)}
   .hero__copy{gap:18px}
   .hero__vis{aspect-ratio:1/0.8;margin-inline:calc(-1 * var(--gut)) calc(-1 * var(--gut-r));width:auto}
-  .hero__cta{display:grid;grid-template-columns:minmax(0,1fr);}
-  .hero__cta .btn{width:100%}
   .hdr .lang{display:none}
   .mission{max-width:none}
   .prio__list{grid-template-columns:minmax(0,1fr);gap:0}
@@ -471,14 +480,15 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
   .contact__body .btn{width:100%}
   .contact__body{align-items:stretch}
   .ftr{padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
-  .actbar{display:grid;grid-template-columns:1fr 1fr;gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:30;
+  .actbar{display:grid;grid-template-columns:50px minmax(0,1fr) minmax(0,1.25fr);gap:8px;position:fixed;left:0;right:0;bottom:0;z-index:30;
     padding:10px var(--gut-r) calc(10px + env(safe-area-inset-bottom,0px)) var(--gut);background:rgba(37,36,34,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 -1px 0 var(--line);
     transform:translateY(110%);transition:transform .4s var(--ease)}
   .actbar.is-on{transform:none}
   /* телефон: блоки идут друг под другом и входят в экран по одному — без лесенки задержек, короче и ближе */
   .js [data-reveal]{--rv-x:-24px;transform:translateX(-24px);transition-duration:.7s;transition-delay:0s;transition-timing-function:cubic-bezier(.22,.61,.36,1)}
   @supports (animation-timeline: view()){ .js [data-reveal]{transform:none;animation-range:cover 12% cover 32%} }
-  .actbar__b{min-height:50px;padding:0 16px;gap:8px}
+  .actbar__b{min-height:50px;padding:0 10px;gap:8px;font-size:15px;white-space:nowrap}
+  .actbar__b--icon{padding:0}
   .actbar .btn--line::before{background:#252422}
   .dlg[open]{place-items:end stretch;padding:0;padding-top:env(safe-area-inset-top,0px)}
   .dlg__box{width:100%;clip-path:polygon(20px 0,100% 0,100% 100%,0 100%,0 20px);padding:28px var(--gut-r) calc(28px + env(safe-area-inset-bottom,0px)) var(--gut);animation:sheetIn .45s var(--ease)}

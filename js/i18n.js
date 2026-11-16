@@ -10,6 +10,8 @@ window.HC_I18N = {
     'nav.about': 'About',
     'nav.catalog': 'Catalog',
     'nav.news': 'News',
+    'nav.partners': 'Partners',
+    'nav.soon': 'soon',
     'nav.bom': 'Upload BOM',
     'nav.write': 'Contact us',
     'nav.contacts': 'Contacts',
