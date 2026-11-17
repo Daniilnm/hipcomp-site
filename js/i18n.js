@@ -20,7 +20,7 @@ window.HC_I18N = {
     'menuClose': 'Close menu',
     'hero.h': 'The foundation for your innovations',
     'hero.sub': 'Uninterrupted supply of materials for microelectronics',
-    'hero.visLabel': 'Animation: the crystal lattice of a wafer and the HC mark in its depth',
+    'hero.visLabel': 'Animation: a silicon wafer with a magnifying glass gliding across it',
     'cta.quote': 'Request a quote',
     'about.h': 'About us',
     'about.mission': 'By supplying our partners with high-quality materials for microelectronics, we build a reliable foundation for research, development and high-tech manufacturing.',

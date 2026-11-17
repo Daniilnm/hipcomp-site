@@ -156,7 +156,8 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
 /* ---------- 01 Первый экран ---------- */
 /* последовательность: логотип (кто мы) → слоган (ценность) → пояснение (как обеспечиваем) → «Загрузить BOM» */
 .hero{position:relative;padding-bottom:clamp(40px,5vw,72px);padding-top:calc(var(--hdr) + env(safe-area-inset-top,0px) + clamp(24px,4vw,56px));overflow:hidden;
-  background:var(--graphite)}
+  /* фон первого экрана чуть темнее основного графита; к низу плавно возвращается в #2D2C2A, чтобы стык со следующим разделом был незаметен */
+  background:linear-gradient(180deg,rgba(0,0,0,.3),rgba(0,0,0,.24) 55%,rgba(0,0,0,0)) var(--graphite)}
 .hero__in{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);align-items:center;gap:clamp(24px,4vw,64px);min-height:min(720px,calc(100svh - 110px))}
 .hero__copy{display:flex;flex-direction:column;gap:20px;position:relative;z-index:2;padding-bottom:24px}
 .hero__title{display:flex;flex-direction:column;align-items:flex-start;gap:clamp(40px,7vh,96px);margin:0;font:inherit}
@@ -175,14 +176,38 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
 /* слоган всегда в одну строку: кегль по ширине колонки (строка ≈ 15,3 кегля) */
 .hero__h{font:300 min(44px,calc((100vw - var(--gut) - var(--gut-r)) / 15.5))/1.15 var(--f-brand);letter-spacing:-.01em;color:var(--mint);white-space:nowrap}
 /* пояснение отделено от слогана — у слогана своя смысловая пауза */
-.hero__sub{font:400 clamp(17px,1.3vw,20px)/1.5 var(--f-brand);color:var(--paper);max-width:31ch;margin-top:clamp(12px,2.6vw,36px)}
+.hero__sub{font:400 clamp(19.5px,1.5vw,23px)/1.5 var(--f-brand);color:var(--paper);max-width:31ch;margin-top:clamp(12px,2.6vw,36px)}
 /* десктоп: колонка текста шире, чтобы слоган шёл одной строкой крупно */
 @media (min-width:1081px){
   .hero__in{grid-template-columns:minmax(0,6.4fr) minmax(0,5.6fr)}
   .hero__h{font-size:clamp(26px,3.05vw,43px)}
 }
 .hero__vis{position:relative;aspect-ratio:1.12/1;width:calc(100% + clamp(0px,4vw,64px));max-height:760px;margin-right:calc(-1 * clamp(0px,4vw,64px))}
-.hero__vis canvas{width:100%;height:100%}
+/* пластина — видео; фон вокруг убран эллиптической маской точно по ободу (контур найден по кадрам исходника),
+   мягкий край ~1 px. Сцена не растягивается: ширина ограничена и шириной, и высотой области (cqw/cqh) */
+.hero__vis{display:flex;align-items:center;justify-content:center;container-type:size}
+.hero__stage{position:relative;flex:none;width:100%;width:min(calc(100cqw - var(--wafer-r,0px) - var(--wafer-l,0px)),138.3cqh);margin:0 var(--wafer-r,0px) 0 var(--wafer-l,0px);aspect-ratio:1400/1012}
+.hero__wafer{position:relative;z-index:1;display:block;width:100%;height:100%;background:transparent;
+  -webkit-mask-image:radial-gradient(49.53% 49.38% at 50.03% 50.07%,#000 calc(100% - 1px),transparent calc(100% + 1px));
+          mask-image:radial-gradient(49.53% 49.38% at 50.03% 50.07%,#000 calc(100% - 1px),transparent calc(100% + 1px))}
+/* поля, чтобы обод не упирался в край экрана: на ПК — справа (область пластины выходит за поле сетки), на телефоне — с обеих сторон */
+@media (min-width:1081px){ .hero__stage{--wafer-r:clamp(0px,2.5vw,40px)} }
+@media (max-width:720px){ .hero__stage{--wafer-l:14px;--wafer-r:14px} }
+
+/* свет на фоне — продолжение света в видео. hero.js ведёт слои по кривым, снятым с каждого кадра видео
+   (положение линзы, положение/наклон/ширина/сила световой полосы, яркость пластины), с частотой экрана:
+   ореол — свет «комнаты», тянется к линзе и к полосе и разгорается вместе с пластиной;
+   луч — продолжение полосы за краем пластины под её наклоном и шириной; тень касания и отсвет на поверхности под пластиной.
+   Текстуры света (assets/light-*.png) — мягкие гауссовы пятна с дизерингом, без ступенек градиента.
+   Только светлый тёплый #F3F1EA с прозрачностью и тень — новых цветов нет. Значения в CSS — кадр покоя (без JS) */
+.hero__light{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hl{position:absolute;display:block;pointer-events:none;will-change:transform,opacity;background:url(../assets/light-glow.png?v=1) center/100% 100% no-repeat}
+.hl--halo{left:-70%;top:-65%;width:240%;height:230%;opacity:.38}
+.hl--beam{left:20%;top:-150%;width:60%;height:400%;opacity:0;background-image:url(../assets/light-beam.png?v=1)}
+.hl--shadow{left:3%;top:80%;width:94%;height:26%;background:radial-gradient(closest-side,rgba(0,0,0,.42),rgba(0,0,0,.18) 55%,rgba(0,0,0,0))}
+.hl--floor{left:-12%;top:80%;width:124%;height:40%;opacity:.25}
+/* отблески — холст поверх видео (с запасом по краям, чтобы блики на кромке не обрезались), осветляющее наложение */
+.hero__glints{position:absolute;z-index:2;left:-10%;top:-12%;width:120%;height:124%;max-width:none;pointer-events:none;mix-blend-mode:screen}
 /* десктоп: шапка не закреплена и уезжает вместе со страницей; крупный логотип — в левом верхнем углу экрана,
    на одной высоте с меню; пластина — по центру оставшейся области */
 @media (min-width:1081px){
