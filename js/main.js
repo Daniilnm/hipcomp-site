@@ -93,16 +93,32 @@
   window.matchMedia('(min-width:1081px)').addEventListener('change', function (m) { if (m.matches) menu(false); });
 
   /* ---------- Появление блоков ---------- */
+  var revealObserver;
+  var revealSelector = '[data-reveal-group]';
+  function showGroup(group, immediate) {
+    if (immediate) group.classList.add('reveal-instant');
+    group.classList.add('is-in');
+    if (revealObserver) revealObserver.unobserve(group);
+  }
+  function showTarget(target) {
+    if (!target) return;
+    var group = target.closest(revealSelector) || $(revealSelector, target);
+    if (group) showGroup(group, true);
+  }
   if ('IntersectionObserver' in window) {
-    var rio = new IntersectionObserver(function (es) {
-      es.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        e.target.classList.add('is-in');
-        rio.unobserve(e.target);
+    showTarget(document.getElementById(location.hash.slice(1)));
+    revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) showGroup(entry.target);
       });
-    }, { threshold: .12 });
+    }, { rootMargin: '0px 0px -48px 0px' });
     root.classList.add('reveal-ready');
-    $$('[data-reveal]').forEach(function (el) { rio.observe(el); });
+    $$(revealSelector + ':not(.is-in)').forEach(function (group) {
+      revealObserver.observe(group);
+    });
+    document.addEventListener('focusin', function (e) {
+      if (e.target.matches(':focus-visible')) showTarget(e.target);
+    });
   }
 
   /* ---------- Окна ---------- */
@@ -310,7 +326,7 @@
     if (x.href) { location.href = x.href; return; }
     var target = $(x.go); if (!target) return;
     var category = target.classList.contains('card');
-    if (category) target.classList.add('is-in');
+    showTarget(target);
     target.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: category ? 'center' : 'start' });
     if (category) target.focus({ preventScroll: true });
   }
