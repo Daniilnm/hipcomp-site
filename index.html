@@ -12,7 +12,7 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/IBMPlexSans-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Manrope-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/style.css?v=42">
+<link rel="stylesheet" href="css/style.css?v=43">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -139,37 +139,17 @@
       <p class="catalog__lead" data-reveal="right" style="--d:1" data-i18n="cat.lead">Подберем материал под вашу спецификацию</p>
     </div>
 
-    <div class="cards">
-      <details class="card" id="cat-semi" data-reveal="left" style="--d:1">
-        <summary class="card__t"><span data-i18n="cat.c1">Полупровод&shy;никовые подложки</span></summary>
-        <p class="card__chem" translate="no">Si, SiC, GaAs, InP, Al<sub>2</sub>O<sub>3</sub></p>
-        <dl class="card__spec mono">
-          <div><dt data-i18n="spec.d">Диаметр</dt><dd data-i18n="cv.d1">Ø&nbsp;50–200&nbsp;мм</dd></div>
-          <div><dt data-i18n="spec.o">Ориентация</dt><dd>(100), (111), c-plane</dd></div>
-        </dl>
-        <button class="card__btn" type="button" data-open="contact" data-topic="semi"><span data-i18n="cat.req">Запросить КП</span></button>
-      </details>
-
-      <details class="card" id="cat-ceramic" data-reveal="left" style="--d:2">
-        <summary class="card__t"><span data-i18n="cat.c2">Керамические подложки</span></summary>
-        <p class="card__chem" translate="no">Al<sub>2</sub>O<sub>3</sub>, AlN, Si<sub>3</sub>N<sub>4</sub></p>
-        <dl class="card__spec mono">
-          <div><dt data-i18n="spec.f">Формат</dt><dd data-i18n="cv.f">2×2″, 4×4″, 4,5×4,5″</dd></div>
-          <div><dt data-i18n="spec.t">Толщина</dt><dd data-i18n="cv.t">0,25–1,0&nbsp;мм</dd></div>
-        </dl>
-        <button class="card__btn" type="button" data-open="contact" data-topic="ceramic"><span data-i18n="cat.req">Запросить КП</span></button>
-      </details>
-
-      <details class="card" id="cat-epi" data-reveal="left" style="--d:3">
-        <summary class="card__t"><span data-i18n="cat.c3">Эпитаксиальные структуры</span></summary>
-        <p class="card__chem" translate="no">GaN/SiC, GaN/Si, AlGaN/GaN, InGaAs/InP</p>
-        <dl class="card__spec mono">
-          <div><dt data-i18n="spec.a">Назначение</dt><dd data-i18n="cv.a">HEMT, LED, фотоника</dd></div>
-          <div><dt data-i18n="spec.d">Диаметр</dt><dd data-i18n="cv.d3">Ø&nbsp;50–150&nbsp;мм</dd></div>
-        </dl>
-        <button class="card__btn" type="button" data-open="contact" data-topic="epi"><span data-i18n="cat.req">Запросить КП</span></button>
-      </details>
-    </div>
+    <ul class="cards" role="list">
+      <li class="card" id="cat-semi" tabindex="-1" data-reveal="left" style="--d:1">
+        <h3 class="card__t" data-i18n="cat.c1">Полупроводниковые подложки</h3>
+      </li>
+      <li class="card" id="cat-ceramic" tabindex="-1" data-reveal="left" style="--d:2">
+        <h3 class="card__t" data-i18n="cat.c2">Керамические подложки</h3>
+      </li>
+      <li class="card" id="cat-epi" tabindex="-1" data-reveal="left" style="--d:3">
+        <h3 class="card__t" data-i18n="cat.c3">Эпитаксиальные структуры</h3>
+      </li>
+    </ul>
 
     <div class="bom">
       <p class="bom__txt" data-reveal="left"><span data-i18n="bom.t">Есть BOM или спецификация?</span> <span data-i18n="bom.p">Загрузите файл в формате XLSX, XLS, CSV, PDF или TXT.</span></p>
@@ -371,7 +351,7 @@
      Пустая строка = демо-режим: форма проверяется, но никуда не отправляется. */
   window.HC_CONFIG = { formEndpoint: '' };
 </script>
-<script src="js/i18n.js?v=26" defer></script>
-<script src="js/main.js?v=26" defer></script>
+<script src="js/i18n.js?v=27" defer></script>
+<script src="js/main.js?v=27" defer></script>
 </body>
 </html>

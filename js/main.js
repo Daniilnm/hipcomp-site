@@ -105,22 +105,12 @@
     $$('[data-reveal]').forEach(function (el) { rio.observe(el); });
   }
 
-  /* ---------- Прямые ссылки на категории ---------- */
-  function expandLinkedCategory() {
-    var category = document.getElementById(location.hash.slice(1));
-    if (category && category.matches('details.card')) category.open = true;
-  }
-  window.addEventListener('hashchange', expandLinkedCategory);
-  expandLinkedCategory();
-
   /* ---------- Окна ---------- */
   var dialogs = { contact: $('#dlg-contact'), bom: $('#dlg-bom'), search: $('#dlg-search') };
-  function openDlg(name, opener) {
+  function openDlg(name) {
     var d = dialogs[name]; if (!d) return;
     if (!mnav.hidden) menu(false);
     Object.keys(dialogs).forEach(function (k) { if (dialogs[k].open && k !== name) closeDlg(dialogs[k]); });
-    var topic = opener && opener.dataset.topic;
-    if (topic) { var r = $('input[name="topic"][value="' + topic + '"]', d); if (r) r.checked = true; }
     if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
     root.style.overflow = 'hidden';
     var first = name === 'search' ? searchInput : $('[data-view="form"] input:not([type=radio]):not([type=file]), [data-view="form"] textarea', d);
@@ -129,7 +119,7 @@
   }
   document.addEventListener('click', function (e) {
     var o = e.target.closest('[data-open]');
-    if (o) { e.preventDefault(); openDlg(o.dataset.open, o); }
+    if (o) { e.preventDefault(); openDlg(o.dataset.open); }
   });
   Object.keys(dialogs).forEach(function (k) {
     var d = dialogs[k];
@@ -261,26 +251,20 @@
   drop.addEventListener('drop', function (e) { var f = e.dataTransfer && e.dataTransfer.files[0]; if (f) setFile(f); });
 
   /* ---------- Поиск ---------- */
-  var IDX = [
-    { ru: 'Кремниевые пластины', en: 'Silicon wafers', f: 'Si', k: 'si кремний silicon пластина wafer 100 111', go: '#cat-semi', c: 'cat.c1' },
-    { ru: 'Карбид кремния', en: 'Silicon carbide', f: 'SiC', k: 'sic 4h 6h карбид silicon carbide', go: '#cat-semi', c: 'cat.c1' },
-    { ru: 'Арсенид галлия', en: 'Gallium arsenide', f: 'GaAs', k: 'gaas арсенид галлия gallium arsenide', go: '#cat-semi', c: 'cat.c1' },
-    { ru: 'Фосфид индия', en: 'Indium phosphide', f: 'InP', k: 'inp фосфид индия indium phosphide', go: '#cat-semi', c: 'cat.c1' },
-    { ru: 'Сапфир', en: 'Sapphire', f: 'Al2O3', k: 'сапфир sapphire c-plane al2o3 лейкосапфир', go: '#cat-semi', c: 'cat.c1' },
-    { ru: 'Оксид алюминия, керамика', en: 'Alumina ceramics', f: 'Al2O3', k: 'al2o3 алюмооксидная оксид алюминия поликор alumina ceramic 96 99.6', go: '#cat-ceramic', c: 'cat.c2' },
-    { ru: 'Нитрид алюминия', en: 'Aluminium nitride', f: 'AlN', k: 'aln нитрид алюминия aluminum nitride теплопроводность', go: '#cat-ceramic', c: 'cat.c2' },
-    { ru: 'Нитрид кремния', en: 'Silicon nitride', f: 'Si3N4', k: 'si3n4 нитрид кремния silicon nitride', go: '#cat-ceramic', c: 'cat.c2' },
-    { ru: 'GaN на SiC', en: 'GaN-on-SiC', f: 'GaN/SiC', k: 'gan sic hemt нитрид галлия gallium nitride свч rf', go: '#cat-epi', c: 'cat.c3' },
-    { ru: 'GaN на кремнии', en: 'GaN-on-Si', f: 'GaN/Si', k: 'gan si нитрид галлия power силовая', go: '#cat-epi', c: 'cat.c3' },
-    { ru: 'Гетероструктуры AlGaN/GaN', en: 'AlGaN/GaN heterostructures', f: 'AlGaN/GaN', k: 'algan gan hemt гетероструктура heterostructure', go: '#cat-epi', c: 'cat.c3' },
-    { ru: 'InGaAs на InP', en: 'InGaAs-on-InP', f: 'InGaAs/InP', k: 'ingaas inp фотоника photonics фотодиод', go: '#cat-epi', c: 'cat.c3' },
-    { ru: 'О нас', en: 'About us', k: 'о компании about company миссия mission', go: '#about', c: 'nav.about' },
-    { ru: 'Каталог', en: 'Catalog', k: 'каталог catalog продукция products подложки substrates', go: '#catalog', c: 'nav.catalog' },
-    { ru: 'Загрузить BOM', en: 'Upload BOM', k: 'bom спецификация перечень файл excel upload specification', open: 'bom', c: 'nav.bom' },
-    { ru: 'Написать нам', en: 'Contact us', k: 'написать заявка кп коммерческое предложение quote contact связаться', open: 'contact', c: 'nav.write' },
-    { ru: 'Контакты', en: 'Contacts', k: 'контакты телефон почта адрес phone email address', go: '#contacts', c: 'nav.contacts' },
-    { ru: 'Новости', en: 'News', k: 'новости news', href: 'news.html', c: 'nav.news' }
+  var CATEGORIES = [
+    { label: 'cat.c1', go: '#cat-semi', k: 'si кремний silicon пластины wafers sic карбид кремния silicon carbide gaas арсенид галлия gallium arsenide inp фосфид индия indium phosphide сапфир sapphire al2o3' },
+    { label: 'cat.c2', go: '#cat-ceramic', k: 'керамика ceramics al2o3 оксид алюминия alumina aln нитрид алюминия aluminium nitride aluminum nitride si3n4 нитрид кремния silicon nitride' },
+    { label: 'cat.c3', go: '#cat-epi', k: 'gan/sic gan/si algan/gan ingaas/inp gan sic inp нитрид галлия gallium nitride гетероструктуры heterostructures hemt фотоника photonics' }
   ];
+  var IDX = CATEGORIES.concat([
+    { label: 'nav.about', k: 'о компании about company миссия mission', go: '#about' },
+    { label: 'nav.catalog', k: 'каталог catalog продукция products подложки substrates', go: '#catalog' },
+    { label: 'nav.bom', k: 'bom спецификация перечень файл excel upload specification', open: 'bom' },
+    { label: 'nav.write', k: 'написать заявка кп коммерческое предложение quote contact связаться', open: 'contact' },
+    { label: 'nav.contacts', k: 'контакты телефон почта адрес phone email address', go: '#contacts' },
+    { label: 'nav.news', k: 'новости news', href: 'news.html' }
+  ]);
+  function resultTitle(x) { return t(x.label).replace(/&nbsp;/g, ' '); }
   var resEl = $('#srch-res'), sel = 0, hits = [];
   function norm(s) { return (s || '').toLowerCase().replace(/ё/g, 'е').replace(/[₀-₉]/g, function (c) { return String(c.charCodeAt(0) - 8320); }); }
   function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -292,21 +276,24 @@
   function renderSearch() {
     var q = norm(searchInput.value.trim());
     if (!q) {
-      hits = IDX.filter(function (x) { return x.f; }).slice(0, 6);
+      hits = CATEGORIES;
     } else {
       hits = IDX.map(function (x) {
-        var title = norm(x[lang]), f = norm(x.f), kw = norm(x.k), s = 0;
-        if (f && f === q) s = 100; else if (f && f.indexOf(q) === 0) s = 80;
-        else if (title.indexOf(q) === 0) s = 70; else if (title.indexOf(q) > -1) s = 50;
-        else if (kw.indexOf(q) > -1) s = 30; else if (f.indexOf(q) > -1) s = 25;
+        var title = norm(resultTitle(x)), kw = norm(x.k), s = 0;
+        if (title.indexOf(q) === 0) s = 70; else if (title.indexOf(q) > -1) s = 50;
+        else if (kw.indexOf(q) > -1) s = 30;
         return { x: x, s: s };
       }).filter(function (h) { return h.s > 0; }).sort(function (a, b) { return b.s - a.s; }).map(function (h) { return h.x; });
     }
     sel = 0;
-    if (!hits.length) { resEl.innerHTML = '<li class="srch__empty" role="option" aria-disabled="true">' + esc(t('s.empty')) + '</li>'; return; }
+    if (!hits.length) {
+      searchInput.removeAttribute('aria-activedescendant');
+      resEl.innerHTML = '<li class="srch__empty" role="option" aria-disabled="true">' + esc(t('s.empty')) + '</li>';
+      return;
+    }
     resEl.innerHTML = hits.map(function (x, i) {
-      var f = x.f ? '<span class="s-f" translate="no">' + esc(x.f).replace(/(\d+)/g, '<sub>$1</sub>') + '</span>' : '';
-      return '<li role="option" id="sr-' + i + '" data-i="' + i + '" aria-selected="' + (i === 0) + '"><b>' + hl(x[lang], q) + f + '</b><span class="s-cat">' + esc(t(x.c).replace(/<[^>]+>/g, '')) + '</span></li>';
+      var group = CATEGORIES.indexOf(x) >= 0 ? '<span class="s-cat">' + esc(t('nav.catalog')) + '</span>' : '';
+      return '<li role="option" id="sr-' + i + '" data-i="' + i + '" aria-selected="' + (i === 0) + '"><b>' + hl(resultTitle(x), q) + '</b>' + group + '</li>';
     }).join('');
     searchInput.setAttribute('aria-activedescendant', 'sr-0');
   }
@@ -322,13 +309,10 @@
     if (x.open) return openDlg(x.open);
     if (x.href) { location.href = x.href; return; }
     var target = $(x.go); if (!target) return;
-    var category = target.matches('details.card');
-    if (category) {
-      target.open = true;
-      target.classList.add('is-in');
-    }
+    var category = target.classList.contains('card');
+    if (category) target.classList.add('is-in');
     target.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: category ? 'center' : 'start' });
-    if (category) $('.card__btn', target).focus({ preventScroll: true });
+    if (category) target.focus({ preventScroll: true });
   }
   searchInput.addEventListener('input', renderSearch);
   searchInput.addEventListener('keydown', function (e) {
