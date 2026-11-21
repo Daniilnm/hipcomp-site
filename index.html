@@ -12,20 +12,13 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/IBMPlexSans-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Manrope-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/style.css?v=41">
+<link rel="stylesheet" href="css/style.css?v=42">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
 
 <!-- Иконки -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-hc" viewBox="0 0 382.21 171.86">
-    <path d="M12.61 59.16L47.59 0.94L109.11 0.94L74.12 59.16Z"/>
-    <path d="M0 171.86L8.1 171.86L43.65 112.7L57.27 112.7L21.72 171.86L45.66 171.86L81.22 112.7L145.56 112.7L213.27 0L166.21 0L130.66 59.16L119.39 59.16L154.94 0L143.67 0L108.12 59.16L67.71 59.16Z"/>
-    <path d="M110 171.86L151.33 171.86L186.88 112.7L145.56 112.7Z"/>
-    <path d="M186.88 112.7L254.59 0L356.38 0L320.83 59.16L278.15 59.16L245.98 112.7L353.09 112.7L317.54 171.86L190.29 171.86L225.84 112.7Z"/>
-    <path d="M334.45 59.16L346.66 59.16L382.21 0L370 0Z"/>
-  </symbol>
   <symbol id="i-mail" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M3.5 5.5h17v13h-17z M3.8 5.8 12 12.5l8.2-6.7"/></symbol>
   <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="m15.3 15.3 5.2 5.2" stroke="currentColor" stroke-width="1.5" fill="none"/></symbol>
   <symbol id="i-upload" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M12 15.5V4m0 0L7.5 8.5M12 4l4.5 4.5M4.5 14v5.5h15V14"/></symbol>
@@ -42,7 +35,7 @@
 <header class="hdr" id="hdr">
   <div class="hdr__in wrap">
     <a class="logo logo--hdr" href="#top" aria-label="HipComp — на главную">
-      <img class="logo__img" src="assets/logo-hipcomp.svg" alt="" width="1009" height="166">
+      <img class="logo__img" src="assets/logo-hipcomp.svg" alt="" width="1004" height="166">
     </a>
 
     <nav class="nav" aria-label="Основное меню" data-i18n-aria="navLabel">
@@ -88,77 +81,53 @@
 <!-- ===== 01 Первый экран ===== -->
 <section class="hero" id="top" aria-labelledby="hero-h">
   <div class="hero__in wrap">
-    <div class="hero__copy">
-      <!-- кто мы → какую ценность создаём → как её обеспечиваем -->
-      <h1 class="hero__title" id="hero-h">
-        <img class="hero__logo" src="assets/logo-hipcomp.svg" alt="HipComp" width="1009" height="166">
-        <span class="hero__h" data-i18n="hero.h">Фундамент для&nbsp;ваших инноваций</span>
-      </h1>
-      <p class="hero__sub" data-i18n="hero.sub">Бесперебойные поставки материалов для&nbsp;микроэлектроники</p>
-    </div>
-
-    <figure class="hero__vis" aria-label="Анимация: кремниевая пластина, по&nbsp;которой плавно движется увеличительное стекло" data-i18n-aria="hero.visLabel">
-      <!-- пластина вырезана из видео эллиптической маской (style.css → .hero__wafer); цикл 6 с без звука.
-           Видео с прозрачным фоном для макетов — ../figma-assets/wafer-alpha.mov (HEVC + альфа) и wafer-alpha.png -->
-      <div class="hero__stage" id="stage">
-        <!-- свет на фоне, синхронный с видео (js/hero.js): ореол, луч — продолжение световой полосы за краем пластины, тень и отсвет под ней -->
-        <div class="hero__light" aria-hidden="true">
-          <i class="hl hl--halo"></i><i class="hl hl--beam"></i><i class="hl hl--shadow"></i><i class="hl hl--floor"></i>
-        </div>
-        <video class="hero__wafer" id="wafer" src="assets/wafer.mp4?v=1" poster="assets/wafer-poster.jpg?v=1" width="1400" height="1012"
-               muted loop playsinline preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true"></video>
-        <!-- отблески поверх видео: на ободе линзы и мерцание ячеек вдоль световой полосы -->
-        <canvas class="hero__glints" id="glints" aria-hidden="true"></canvas>
-      </div>
-    </figure>
+    <h1 class="sec__h" id="hero-h"><span data-i18n="hero.h">Фундамент для ваших инноваций</span></h1>
+    <p class="hero__sub" data-i18n="hero.sub">Бесперебойные поставки материалов для микроэлектроники</p>
   </div>
-
 </section>
 
-<!-- ===== 02 О нас ===== -->
+<!-- ===== 02 Миссия ===== -->
 <section class="sec about" id="about" aria-labelledby="about-h">
   <div class="wrap about__grid">
-    <h2 class="sec__h" id="about-h" data-reveal data-i18n="about.h">О&nbsp;нас</h2>
-    <div class="about__body">
-      <p class="mission" data-reveal style="--d:1" data-i18n="about.mission">Обеспечивая партнёров качественными материалами для&nbsp;микроэлектроники, мы создаём надёжную основу для&nbsp;исследований, разработок и&nbsp;высокотехнологичного производства.</p>
-      <p class="about__aud" data-reveal style="--d:2" data-i18n="about.aud">Работаем с&nbsp;НИИ и&nbsp;лабораториями, предприятиями радиоэлектронной промышленности, учебными заведениями и&nbsp;госкорпорациями.</p>
-    </div>
+    <p class="about__company" data-reveal="left" data-i18n="about.company">ООО «Хиптроникс Компонентс»</p>
+    <h2 class="sec__h" id="about-h" data-reveal="left" data-i18n="about.h">Миссия</h2>
+    <p class="mission" data-reveal="right" style="--d:1" data-i18n="about.mission">Обеспечивая партнёров качественными материалами для микроэлектроники, мы создаём надёжную основу для исследований, разработок и высокотехнологичного производства.</p>
   </div>
 </section>
 
-<!-- ===== 03 Ценностное предложение ===== -->
+<!-- ===== 03 Решение для ваших задач ===== -->
 <section class="sec value" aria-labelledby="value-h">
-  <div class="wrap">
-    <h2 class="sec__h" id="value-h" data-reveal data-i18n="value.h">Что мы предлагаем</h2>
+  <div class="wrap value__grid">
+    <h2 class="sec__h" id="value-h" data-reveal="left" data-i18n="value.h">Решение для ваших задач</h2>
     <div class="value__list">
-      <article class="vrow" data-reveal style="--d:1">
-        <h3 class="vrow__t" data-i18n="value.t1">Гибкость поставок</h3>
-        <p class="vrow__p" data-i18n="value.p1">От&nbsp;единичных образцов для&nbsp;исследований и&nbsp;обучения до&nbsp;регулярных поставок для&nbsp;серийного производства.</p>
-        <div class="vrow__vis"><svg class="vg" viewBox="0 0 200 100" aria-hidden="true"><path class="s" d="M10 58A26 14.5 0 0 0 62 58v3A26 14.5 0 0 1 10 61z"/><ellipse class="f" cx="36" cy="58" rx="26" ry="14.5"/><path class="a" d="M74 50H104m-5-4.5 5 4.5-5 4.5"/><path class="s" d="M126 62A26 14.5 0 0 0 178 62v3A26 14.5 0 0 1 126 65z"/><ellipse class="f" cx="152" cy="62" rx="26" ry="14.5"/><path class="s" d="M126 56A26 14.5 0 0 0 178 56v3A26 14.5 0 0 1 126 59z"/><ellipse class="f" cx="152" cy="56" rx="26" ry="14.5"/><path class="s" d="M126 50A26 14.5 0 0 0 178 50v3A26 14.5 0 0 1 126 53z"/><ellipse class="f" cx="152" cy="50" rx="26" ry="14.5"/><path class="s" d="M126 44A26 14.5 0 0 0 178 44v3A26 14.5 0 0 1 126 47z"/><ellipse class="f" cx="152" cy="44" rx="26" ry="14.5"/><path class="s" d="M126 38A26 14.5 0 0 0 178 38v3A26 14.5 0 0 1 126 41z"/><ellipse class="f" cx="152" cy="38" rx="26" ry="14.5"/><path class="s" d="M126 32A26 14.5 0 0 0 178 32v3A26 14.5 0 0 1 126 35z"/><ellipse class="f" cx="152" cy="32" rx="26" ry="14.5"/><path class="s" d="M126 26A26 14.5 0 0 0 178 26v3A26 14.5 0 0 1 126 29z"/><ellipse class="m" cx="152" cy="26" rx="26" ry="14.5"/><text x="36" y="94" text-anchor="middle" data-i18n="value.s0">1 шт.</text><text x="152" y="94" text-anchor="middle" data-i18n="value.s1">серия</text></svg></div>
+      <article class="vrow" data-reveal="right" style="--d:1">
+        <h3 data-i18n="value.t1">Гибкость поставок</h3>
+        <p data-i18n="value.p1">от единичных образцов до серийных поставок.</p>
       </article>
-      <article class="vrow" data-reveal style="--d:2">
-        <h3 class="vrow__t" data-i18n="value.t2">Материалы для&nbsp;передовых архитектур</h3>
-        <p class="vrow__p" data-i18n="value.p2">От&nbsp;базовых полупроводниковых пластин до&nbsp;сложных эпитаксиальных структур.</p>
-        <div class="vrow__vis"><svg class="vg" viewBox="0 0 200 100" aria-hidden="true"><path class="s" d="M8 50 38 66.8v9L8 59z"/><path class="r" d="M68 50 38 66.8v9L68 59z"/><path class="f" d="M38 33.2 68 50 38 66.8 8 50z"/><path class="a" d="M80 50H110m-5-4.5 5 4.5-5 4.5"/><path class="s" d="M124 50 154 66.8v9L124 59z"/><path class="r" d="M184 50 154 66.8v9L184 59z"/><path class="f" d="M154 33.2 184 50 154 66.8 124 50z"/><path class="s s1" d="M124 46 154 62.8v4L124 50z"/><path class="r r1" d="M184 46 154 62.8v4L184 50z"/><path class="l1" d="M154 29.2 184 46 154 62.8 124 46z"/><path class="s s2" d="M124 43 154 59.8v3L124 46z"/><path class="r r2" d="M184 43 154 59.8v3L184 46z"/><path class="l2" d="M154 26.2 184 43 154 59.8 124 43z"/><path class="s sm" d="M124 40.5 154 57.3v2.5L124 43z"/><path class="r rm" d="M184 40.5 154 57.3v2.5L184 43z"/><path class="m" d="M154 23.7 184 40.5 154 57.3 124 40.5z"/><text x="38" y="94" text-anchor="middle" data-i18n="value.s2">подложка</text><text x="154" y="94" text-anchor="middle" data-i18n="value.s3">эпиструктура</text></svg></div>
+      <article class="vrow" data-reveal="right" style="--d:2">
+        <h3 data-i18n="value.t2">Материалы для передовых архитектур</h3>
+        <p data-i18n="value.p2">от базовых подложек до сложных эпитаксиальных структур.</p>
       </article>
-      <article class="vrow" data-reveal style="--d:3">
-        <h3 class="vrow__t" data-i18n="value.t3">Технологическая точность</h3>
-        <p class="vrow__p" data-i18n="value.p3">Проверенные поставщики и&nbsp;строгое соответствие техническим спецификациям.</p>
-        <div class="vrow__vis"><svg class="vg" viewBox="0 0 200 100" aria-hidden="true"><path class="s" d="M50 32A50 27.9 0 0 0 150 32v4A50 27.9 0 0 1 50 36z"/><ellipse class="f" cx="100" cy="32" rx="50" ry="27.9"/><path class="fl" d="M82.9 5.7H117.1"/><path class="d" d="M50 39V78M150 39V78"/><path class="d" d="M50 74H89M111 74H150"/><path class="dh" d="M50 74l7-3v6zM150 74l-7-3v6z"/><text class="dt" x="100" y="78.5" text-anchor="middle">Ø</text><text x="100" y="94" text-anchor="middle" data-i18n="value.s4">по спецификации</text></svg></div>
+      <article class="vrow" data-reveal="right" style="--d:3">
+        <h3 data-i18n="value.t3">Технологическая точность</h3>
+        <p data-i18n="value.p3">проверенные поставщики и соответствие спецификациям.</p>
       </article>
     </div>
   </div>
 </section>
 
-<!-- ===== 04 Наши приоритеты ===== -->
+<!-- ===== 04 Приоритет ===== -->
 <section class="sec prio" aria-labelledby="prio-h">
-  <div class="wrap">
-    <h2 class="sec__h" id="prio-h" data-reveal data-i18n="prio.h">Наши приоритеты</h2>
-    <ul class="prio__list">
-      <li class="prio__i" data-reveal style="--d:1"><span class="slit" aria-hidden="true"></span><span data-i18n="prio.1">Индивидуальный подход</span></li>
-      <li class="prio__i" data-reveal style="--d:2"><span class="slit" aria-hidden="true"></span><span data-i18n="prio.2">Оперативность</span></li>
-      <li class="prio__i" data-reveal style="--d:3"><span class="slit" aria-hidden="true"></span><span data-i18n="prio.3">Надёжность партнёрских отношений</span></li>
-    </ul>
+  <div class="wrap prio__grid">
+    <h2 class="sec__h" id="prio-h" data-reveal="left" data-i18n="prio.h">Приоритет — лояльность партнёров</h2>
+    <div>
+      <p class="prio__lead" data-reveal="right" style="--d:1" data-i18n="prio.lead">Создание конкурентоспособных и эффективных решений для полного удовлетворения потребностей заказчиков.</p>
+      <ul class="prio__list">
+        <li data-reveal="right" style="--d:2" data-i18n="prio.1">Индивидуальный подход</li>
+        <li data-reveal="right" style="--d:3" data-i18n="prio.2">Оперативность</li>
+        <li data-reveal="right" style="--d:4" data-i18n="prio.3">Надёжность партнёрских отношений</li>
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -166,84 +135,58 @@
 <section class="sec catalog" id="catalog" aria-labelledby="cat-h">
   <div class="wrap">
     <div class="catalog__head">
-      <h2 class="sec__h" id="cat-h" data-reveal data-i18n="cat.h">Каталог</h2>
-      <p class="catalog__lead" data-reveal style="--d:1" data-i18n="cat.lead">Подберём материал под&nbsp;вашу спецификацию: диаметр, ориентацию, легирование, толщину и&nbsp;количество.</p>
+      <h2 class="sec__h" id="cat-h" data-reveal="left" data-i18n="cat.h">Каталог</h2>
+      <p class="catalog__lead" data-reveal="right" style="--d:1" data-i18n="cat.lead">Подберем материал под вашу спецификацию</p>
     </div>
 
     <div class="cards">
-      <article class="card" id="cat-semi" data-reveal style="--d:1">
-        <div class="card__vis" aria-hidden="true">
-          <svg viewBox="0 0 200 140" class="v-wafer">
-            <defs><clipPath id="wclip"><path d="M121.3 27.2 124.7 27.9 128 28.8 131.2 29.7 134.3 30.8 137.3 32 140.1 33.2 142.9 34.6 145.4 36 147.9 37.5 150.1 39.1 152.2 40.8 154.1 42.5 155.8 44.3 157.4 46.1 158.7 48 159.9 50 160.8 51.9 161.6 53.9 162.1 55.9 162.4 58 162.5 60 162.4 62 162.1 64 161.6 66.1 160.8 68 159.9 70 158.7 71.9 157.4 73.8 155.9 75.7 154.1 77.5 152.2 79.2 150.2 80.9 147.9 82.4 145.5 84 142.9 85.4 140.2 86.8 137.3 88 134.4 89.2 131.3 90.2 128.1 91.2 124.8 92.1 121.4 92.8 117.9 93.5 114.4 94 110.9 94.4 107.3 94.7 103.6 94.9 100 94.9 96.4 94.9 92.7 94.7 89.1 94.4 85.6 94 82.1 93.5 78.6 92.8 75.2 92.1 71.9 91.2 68.7 90.2 65.6 89.2 62.7 88 59.8 86.8 57.1 85.4 54.5 84 52.1 82.4 49.8 80.9 47.8 79.2 45.9 77.5 44.1 75.7 42.6 73.8 41.3 71.9 40.1 70 39.2 68 38.4 66.1 37.9 64 37.6 62 37.5 60 37.6 58 37.9 55.9 38.4 53.9 39.2 51.9 40.1 50 41.3 48 42.6 46.1 44.2 44.3 45.9 42.5 47.8 40.8 49.9 39.1 52.1 37.5 54.6 36 57.1 34.6 59.9 33.2 62.7 32 65.7 30.8 68.8 29.7 72 28.8 75.3 27.9 78.7 27.2z"/></clipPath></defs>
-            <path class="v-wafer__side" d="M162.5 60 162.4 62.3 162 64.6 161.3 66.8 160.4 69 159.2 71.2 157.8 73.4 156.1 75.4 154.1 77.5 152 79.4 149.6 81.3 147 83 144.2 84.7 141.2 86.3 138.1 87.7 134.7 89 131.3 90.3 127.6 91.3 123.9 92.3 120.1 93.1 116.2 93.7 112.2 94.3 108.2 94.6 104.1 94.9 100 94.9 95.9 94.9 91.8 94.6 87.8 94.3 83.8 93.7 79.9 93.1 76.1 92.3 72.4 91.3 68.7 90.3 65.3 89 61.9 87.7 58.8 86.3 55.8 84.7 53 83 50.4 81.3 48 79.4 45.9 77.5 43.9 75.4 42.2 73.4 40.8 71.2 39.6 69 38.7 66.8 38 64.6 37.6 62.3 37.5 60 37.5 66 37.6 68.3 38 70.6 38.7 72.8 39.6 75 40.8 77.2 42.2 79.4 43.9 81.4 45.9 83.5 48 85.4 50.4 87.3 53 89 55.8 90.7 58.8 92.3 61.9 93.7 65.3 95 68.7 96.3 72.4 97.3 76.1 98.3 79.9 99.1 83.8 99.7 87.8 100.3 91.8 100.6 95.9 100.9 100 100.9 104.1 100.9 108.2 100.6 112.2 100.3 116.2 99.7 120.1 99.1 123.9 98.3 127.6 97.3 131.3 96.3 134.7 95 138.1 93.7 141.2 92.3 144.2 90.7 147 89 149.6 87.3 152 85.4 154.1 83.5 156.1 81.4 157.8 79.4 159.2 77.2 160.4 75 161.3 72.8 162 70.6 162.4 68.3 162.5 66z"/>
-            <path class="v-wafer__disk" d="M121.3 27.2 124.7 27.9 128 28.8 131.2 29.7 134.3 30.8 137.3 32 140.1 33.2 142.9 34.6 145.4 36 147.9 37.5 150.1 39.1 152.2 40.8 154.1 42.5 155.8 44.3 157.4 46.1 158.7 48 159.9 50 160.8 51.9 161.6 53.9 162.1 55.9 162.4 58 162.5 60 162.4 62 162.1 64 161.6 66.1 160.8 68 159.9 70 158.7 71.9 157.4 73.8 155.9 75.7 154.1 77.5 152.2 79.2 150.2 80.9 147.9 82.4 145.5 84 142.9 85.4 140.2 86.8 137.3 88 134.4 89.2 131.3 90.2 128.1 91.2 124.8 92.1 121.4 92.8 117.9 93.5 114.4 94 110.9 94.4 107.3 94.7 103.6 94.9 100 94.9 96.4 94.9 92.7 94.7 89.1 94.4 85.6 94 82.1 93.5 78.6 92.8 75.2 92.1 71.9 91.2 68.7 90.2 65.6 89.2 62.7 88 59.8 86.8 57.1 85.4 54.5 84 52.1 82.4 49.8 80.9 47.8 79.2 45.9 77.5 44.1 75.7 42.6 73.8 41.3 71.9 40.1 70 39.2 68 38.4 66.1 37.9 64 37.6 62 37.5 60 37.6 58 37.9 55.9 38.4 53.9 39.2 51.9 40.1 50 41.3 48 42.6 46.1 44.2 44.3 45.9 42.5 47.8 40.8 49.9 39.1 52.1 37.5 54.6 36 57.1 34.6 59.9 33.2 62.7 32 65.7 30.8 68.8 29.7 72 28.8 75.3 27.9 78.7 27.2z"/>
-            <path class="v-wafer__grid" clip-path="url(#wclip)" d="M106.8 6.8 4.8 63.8M93.2 6.8 195.2 63.8M117.8 13 15.8 70M82.2 13 184.2 70M128.9 19.1 26.9 76.2M71.1 19.1 173.1 76.2M139.9 25.3 38 82.3M60 25.3 162.1 82.3M151 31.5 49 88.5M49 31.5 151 88.5M162.1 37.7 60 94.7M38 37.7 139.9 94.7M173.1 43.9 71.1 100.8M26.9 43.9 128.9 100.8M184.2 50 82.2 107M15.8 50 117.8 107M195.2 56.2 93.2 113.2M4.8 56.2 106.8 113.2"/>
-            <path class="v-wafer__flat" d="M78.7 27.2 121.3 27.2"/>
-          </svg>
-        </div>
-        <h3 class="card__t" data-i18n="cat.c1">Полупровод&shy;никовые подложки</h3>
+      <details class="card" id="cat-semi" data-reveal="left" style="--d:1">
+        <summary class="card__t"><span data-i18n="cat.c1">Полупровод&shy;никовые подложки</span></summary>
         <p class="card__chem" translate="no">Si, SiC, GaAs, InP, Al<sub>2</sub>O<sub>3</sub></p>
         <dl class="card__spec mono">
           <div><dt data-i18n="spec.d">Диаметр</dt><dd data-i18n="cv.d1">Ø&nbsp;50–200&nbsp;мм</dd></div>
           <div><dt data-i18n="spec.o">Ориентация</dt><dd>(100), (111), c-plane</dd></div>
         </dl>
         <button class="card__btn" type="button" data-open="contact" data-topic="semi"><span data-i18n="cat.req">Запросить КП</span></button>
-      </article>
+      </details>
 
-      <article class="card" id="cat-ceramic" data-reveal style="--d:2">
-        <div class="card__vis" aria-hidden="true">
-          <svg viewBox="0 0 200 140" class="v-plate">
-            <path class="v-plate__top" d="M100 22 168 60 100 98 32 60z"/>
-            <path class="v-plate__side" d="M32 60v8l68 38v-8z"/>
-            <path class="v-plate__side v-plate__side--r" d="M168 60v8l-68 38v-8z"/>
-            <path class="v-plate__scribe" d="M49 50.5 117 88.5M66 41 134 79M83 31.5 151 69.5M49 69.5 117 31.5M66 79 134 41M83 88.5 151 50.5"/>
-          </svg>
-        </div>
-        <h3 class="card__t" data-i18n="cat.c2">Керамические подложки</h3>
+      <details class="card" id="cat-ceramic" data-reveal="left" style="--d:2">
+        <summary class="card__t"><span data-i18n="cat.c2">Керамические подложки</span></summary>
         <p class="card__chem" translate="no">Al<sub>2</sub>O<sub>3</sub>, AlN, Si<sub>3</sub>N<sub>4</sub></p>
         <dl class="card__spec mono">
           <div><dt data-i18n="spec.f">Формат</dt><dd data-i18n="cv.f">2×2″, 4×4″, 4,5×4,5″</dd></div>
           <div><dt data-i18n="spec.t">Толщина</dt><dd data-i18n="cv.t">0,25–1,0&nbsp;мм</dd></div>
         </dl>
         <button class="card__btn" type="button" data-open="contact" data-topic="ceramic"><span data-i18n="cat.req">Запросить КП</span></button>
-      </article>
+      </details>
 
-      <article class="card" id="cat-epi" data-reveal style="--d:3">
-        <div class="card__vis" aria-hidden="true">
-          <svg viewBox="0 0 200 140" class="v-epi">
-              <g class="l0"><path class="s" d="M44 86.3 100 117.6v12L44 98.3z"/><path class="r" d="M156 86.3 100 117.6v12L156 98.3z"/><path d="M100 55 156 86.3 100 117.6 44 86.3z"/></g>
-              <g class="l1"><path class="s" d="M44 74.3 100 105.6v5L44 79.3z"/><path class="r" d="M156 74.3 100 105.6v5L156 79.3z"/><path d="M100 43 156 74.3 100 105.6 44 74.3z"/></g>
-              <g class="l2"><path class="s" d="M44 63.3 100 94.6v4L44 67.3z"/><path class="r" d="M156 63.3 100 94.6v4L156 67.3z"/><path d="M100 32 156 63.3 100 94.6 44 63.3z"/></g>
-              <g class="l3"><path class="s" d="M44 53.3 100 84.6v3L44 56.3z"/><path class="r" d="M156 53.3 100 84.6v3L156 56.3z"/><path d="M100 22 156 53.3 100 84.6 44 53.3z"/></g>
-              <g class="l4"><path class="s" d="M44 43.3 100 74.6v3L44 46.3z"/><path class="r" d="M156 43.3 100 74.6v3L156 46.3z"/><path d="M100 12 156 43.3 100 74.6 44 43.3z"/></g>
-            </svg>
-        </div>
-        <h3 class="card__t" data-i18n="cat.c3">Эпитаксиальные структуры</h3>
+      <details class="card" id="cat-epi" data-reveal="left" style="--d:3">
+        <summary class="card__t"><span data-i18n="cat.c3">Эпитаксиальные структуры</span></summary>
         <p class="card__chem" translate="no">GaN/SiC, GaN/Si, AlGaN/GaN, InGaAs/InP</p>
         <dl class="card__spec mono">
           <div><dt data-i18n="spec.a">Назначение</dt><dd data-i18n="cv.a">HEMT, LED, фотоника</dd></div>
           <div><dt data-i18n="spec.d">Диаметр</dt><dd data-i18n="cv.d3">Ø&nbsp;50–150&nbsp;мм</dd></div>
         </dl>
         <button class="card__btn" type="button" data-open="contact" data-topic="epi"><span data-i18n="cat.req">Запросить КП</span></button>
-      </article>
+      </details>
     </div>
 
-    <div class="bom" data-reveal>
-      <div class="bom__txt">
-        <h3 class="bom__t" data-i18n="bom.t">Есть BOM или&nbsp;спецификация?</h3>
-        <p data-i18n="bom.p">Загрузите файл в&nbsp;формате XLSX, XLS, CSV, PDF или&nbsp;TXT. Подберём позиции, сроки и&nbsp;пришлём коммерческое предложение.</p>
+    <div class="bom">
+      <p class="bom__txt" data-reveal="left"><span data-i18n="bom.t">Есть BOM или спецификация?</span> <span data-i18n="bom.p">Загрузите файл в формате XLSX, XLS, CSV, PDF или TXT.</span></p>
+      <div class="bom__actions" data-reveal="right" style="--d:1">
+        <button class="btn btn--line" type="button" data-open="contact"><svg aria-hidden="true"><use href="#i-mail"/></svg><span data-i18n="nav.write">Написать нам</span></button>
+        <button class="btn btn--mint" type="button" data-open="bom"><svg aria-hidden="true"><use href="#i-upload"/></svg><span data-i18n="nav.bom">Загрузить BOM</span></button>
       </div>
-      <button class="btn btn--mint" type="button" data-open="bom"><svg aria-hidden="true"><use href="#i-upload"/></svg><span data-i18n="nav.bom">Загрузить BOM</span></button>
     </div>
   </div>
 </section>
 
-<!-- ===== Контакты ===== -->
+<!-- ===== 06 Обсудим ваш проект ===== -->
 <section class="sec contact" id="contacts" aria-labelledby="ct-h">
   <div class="wrap contact__grid">
-    <h2 class="contact__h" id="ct-h" data-reveal data-i18n="ct.h">Обсудим поставку</h2>
-    <div class="contact__body" data-reveal style="--d:1">
-      <a class="contact__tel" href="tel:+79647233016">+7&nbsp;964&nbsp;723-30-16</a>
+    <h2 class="sec__h contact__h" id="ct-h" data-reveal="left" data-i18n="ct.h">Обсудим ваш проект</h2>
+    <div class="contact__body" data-reveal="right" style="--d:1">
+      <a class="contact__tel" href="tel:+79647233016">+7 964 723-30-16</a>
       <a class="contact__mail" href="mailto:hipcomp@yandex.ru">hipcomp@yandex.ru</a>
       <button class="btn btn--mint" type="button" data-open="contact"><svg aria-hidden="true"><use href="#i-mail"/></svg><span data-i18n="nav.write">Написать нам</span></button>
     </div>
@@ -254,8 +197,7 @@
 <footer class="ftr">
   <div class="wrap ftr__in">
     <a class="logo logo--sm" href="#top" aria-label="HipComp — наверх">
-      <svg class="logo__mark" aria-hidden="true"><use href="#i-hc"/></svg>
-      <span class="logo__name" translate="no">HipComp</span>
+      <img class="logo__img" src="assets/logo-hipcomp.svg" alt="" width="1004" height="166">
     </a>
     <nav class="ftr__nav" aria-label="Меню в подвале" data-i18n-aria="navFooter">
       <a href="#about" data-i18n="nav.about">О&nbsp;нас</a>
@@ -429,8 +371,7 @@
      Пустая строка = демо-режим: форма проверяется, но никуда не отправляется. */
   window.HC_CONFIG = { formEndpoint: '' };
 </script>
-<script src="js/i18n.js?v=25" defer></script>
-<script src="js/hero.js?v=5" defer></script>
-<script src="js/main.js?v=25" defer></script>
+<script src="js/i18n.js?v=26" defer></script>
+<script src="js/main.js?v=26" defer></script>
 </body>
 </html>

@@ -93,20 +93,25 @@
   window.matchMedia('(min-width:1081px)').addEventListener('change', function (m) { if (m.matches) menu(false); });
 
   /* ---------- Появление блоков ---------- */
-  var rev = $$('[data-reveal]');
-  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if ('IntersectionObserver' in window) {
     var rio = new IntersectionObserver(function (es) {
       es.forEach(function (e) {
         if (!e.isIntersecting) return;
-        var el = e.target; el.classList.add('is-in'); rio.unobserve(el);
-        // после появления снимаем will-change, чтобы не держать лишние слои
-        var done = function () { el.classList.add('is-done'); };
-        el.addEventListener('transitionend', function te(ev) { if (ev.target === el && ev.propertyName === 'transform') { el.removeEventListener('transitionend', te); done(); } });
-        setTimeout(done, 2500);
+        e.target.classList.add('is-in');
+        rio.unobserve(e.target);
       });
-    }, { threshold: .2, rootMargin: '0px 0px -12% 0px' }); // запасной вариант для браузеров без анимации по прокрутке
-    rev.forEach(function (el) { rio.observe(el); });
-  } else rev.forEach(function (el) { el.classList.add('is-in', 'is-done'); });
+    }, { threshold: .12 });
+    root.classList.add('reveal-ready');
+    $$('[data-reveal]').forEach(function (el) { rio.observe(el); });
+  }
+
+  /* ---------- Прямые ссылки на категории ---------- */
+  function expandLinkedCategory() {
+    var category = document.getElementById(location.hash.slice(1));
+    if (category && category.matches('details.card')) category.open = true;
+  }
+  window.addEventListener('hashchange', expandLinkedCategory);
+  expandLinkedCategory();
 
   /* ---------- Окна ---------- */
   var dialogs = { contact: $('#dlg-contact'), bom: $('#dlg-bom'), search: $('#dlg-search') };
@@ -317,11 +322,13 @@
     if (x.open) return openDlg(x.open);
     if (x.href) { location.href = x.href; return; }
     var target = $(x.go); if (!target) return;
-    target.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: x.go.indexOf('#cat-') === 0 ? 'center' : 'start' });
-    if (target.classList.contains('card')) {
-      target.classList.remove('is-hit'); void target.offsetWidth; target.classList.add('is-hit');
-      var b = $('.card__btn', target); if (b) setTimeout(function () { b.focus({ preventScroll: true }); }, 500);
+    var category = target.matches('details.card');
+    if (category) {
+      target.open = true;
+      target.classList.add('is-in');
     }
+    target.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: category ? 'center' : 'start' });
+    if (category) $('.card__btn', target).focus({ preventScroll: true });
   }
   searchInput.addEventListener('input', renderSearch);
   searchInput.addEventListener('keydown', function (e) {
