@@ -6,6 +6,8 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var root = document.documentElement;
   var CFG = window.HC_CONFIG || {};
+  var pageTitle = $('[data-page-title]');
+  var hdr = $('#hdr');
 
   /* ---------- Язык ---------- */
   var DICT = window.HC_I18N || { en: {}, ru: {} };
@@ -26,7 +28,8 @@
       $$('[data-l]', b).forEach(function (s) { s.dataset.l === lang ? s.setAttribute('aria-current', 'true') : s.removeAttribute('aria-current'); });
       b.setAttribute('aria-label', lang === 'ru' ? 'Switch to English' : 'Переключить на русский');
     });
-    document.title = lang === 'ru' ? 'HipComp — полупроводниковые материалы для микроэлектроники' : 'HipComp — semiconductor materials for microelectronics';
+    if (pageTitle) document.title = pageTitle.textContent + ' — HipComp';
+    else document.title = lang === 'ru' ? 'HipComp — полупроводниковые материалы для микроэлектроники' : 'HipComp — semiconductor materials for microelectronics';
     try { localStorage.setItem('hc-lang', lang); } catch (e) {}
     if (searchInput && searchInput.value) renderSearch();
   }
@@ -35,6 +38,7 @@
   if (!initLang) { try { initLang = localStorage.getItem('hc-lang'); } catch (e) {} }
   setLang(initLang || 'ru');
   $$('[data-lang-toggle]').forEach(function (b) { b.addEventListener('click', function () { setLang(lang === 'ru' ? 'en' : 'ru'); }); });
+  if (!hdr) return;
 
   /* ---------- Уведомление ---------- */
   var toastEl = $('#toast'), toastTimer;
@@ -44,7 +48,6 @@
   }
 
   /* ---------- Шапка ---------- */
-  var hdr = $('#hdr');
   // шапка уезжает вместе со страницей, а лупа отделяется и сопровождает прокрутку — на ПК и на телефоне (ориентир — quanttelecom.ru)
   function onScroll() {
     var y = window.scrollY;
@@ -278,6 +281,7 @@
     { label: 'nav.bom', k: 'bom спецификация перечень файл excel upload specification', open: 'bom' },
     { label: 'nav.write', k: 'написать заявка кп коммерческое предложение quote contact связаться', open: 'contact' },
     { label: 'nav.contacts', k: 'контакты телефон почта адрес phone email address', go: '#contacts' },
+    { label: 'nav.partners', k: 'партнерство сотрудничество partners partnership', href: 'partners.html' },
     { label: 'nav.news', k: 'новости news', href: 'news.html' }
   ]);
   function resultTitle(x) { return t(x.label).replace(/&nbsp;/g, ' '); }

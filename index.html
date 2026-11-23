@@ -12,7 +12,7 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="assets/fonts/IBMPlexSans-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Manrope-var-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/style.css?v=44">
+<link rel="stylesheet" href="css/style.css?v=45">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -41,7 +41,7 @@
     <nav class="nav" aria-label="Основное меню" data-i18n-aria="navLabel">
       <a class="nav__a" style="--i:0" href="#about" data-i18n="nav.about">О&nbsp;нас</a>
       <a class="nav__a" style="--i:1" href="#catalog" data-i18n="nav.catalog">Каталог</a>
-      <span class="nav__a nav__soon" style="--i:2" aria-disabled="true"><span data-i18n="nav.partners">Наши партнёры</span><span class="soon" data-i18n="nav.soon">скоро</span></span>
+      <a class="nav__a" style="--i:2" href="partners.html" data-i18n="nav.partners">Наши партнёры</a>
       <a class="nav__a" style="--i:3" href="news.html" data-i18n="nav.news">Новости</a>
       <button class="nav__a nav__btn" style="--i:4" type="button" data-open="bom"><svg aria-hidden="true"><use href="#i-upload"/></svg><span data-i18n="nav.bom">Загрузить BOM</span></button>
       <button class="nav__a nav__btn" style="--i:5" type="button" data-open="contact"><svg aria-hidden="true"><use href="#i-mail"/></svg><span data-i18n="nav.write">Написать нам</span></button>
@@ -63,7 +63,7 @@
   <nav class="mnav__list wrap" aria-label="Меню" data-i18n-aria="navLabel">
     <a class="mnav__a" style="--i:0" href="#about" data-i18n="nav.about">О&nbsp;нас</a>
     <a class="mnav__a" style="--i:1" href="#catalog" data-i18n="nav.catalog">Каталог</a>
-    <span class="mnav__a mnav__soon" style="--i:2" aria-disabled="true"><span data-i18n="nav.partners">Наши партнёры</span><span class="soon" data-i18n="nav.soon">скоро</span></span>
+    <a class="mnav__a" style="--i:2" href="partners.html" data-i18n="nav.partners">Наши партнёры</a>
     <a class="mnav__a" style="--i:3" href="news.html" data-i18n="nav.news">Новости</a>
   </nav>
   <div class="mnav__foot wrap">
@@ -182,6 +182,7 @@
     <nav class="ftr__nav" aria-label="Меню в подвале" data-i18n-aria="navFooter">
       <a href="#about" data-i18n="nav.about">О&nbsp;нас</a>
       <a href="#catalog" data-i18n="nav.catalog">Каталог</a>
+      <a href="partners.html" data-i18n="nav.partners">Наши партнёры</a>
       <a href="news.html" data-i18n="nav.news">Новости</a>
       <a href="#contacts" data-i18n="nav.contacts">Контакты</a>
     </nav>
@@ -351,7 +352,7 @@
      Пустая строка = демо-режим: форма проверяется, но никуда не отправляется. */
   window.HC_CONFIG = { formEndpoint: '' };
 </script>
-<script src="js/i18n.js?v=27" defer></script>
-<script src="js/main.js?v=28" defer></script>
+<script src="js/i18n.js?v=28" defer></script>
+<script src="js/main.js?v=29" defer></script>
 </body>
 </html>
