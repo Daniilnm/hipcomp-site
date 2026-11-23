@@ -174,9 +174,6 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
 .subpage h1{font-size:var(--landing-title);font-weight:600;letter-spacing:-.025em;line-height:1.05}
 .subpage p{color:var(--muted);max-width:44ch}
 .subpage .btn{align-self:flex-start}
-.subpage h2{margin-block:0 12px;font-size:clamp(18px,2vw,24px);font-weight:500;line-height:1.3}
-.partner-groups{list-style:disc;padding-inline-start:1.25em}
-.partner-groups li + li{margin-top:6px}
 .hero__sub{font-size:var(--landing-body);line-height:1.5;max-width:35ch;text-wrap:pretty}
 
 .js .logo--hdr,.js .hero .sec__h,.js .hero__sub{
