@@ -174,6 +174,7 @@ sup{font-size:.7em;vertical-align:.45em;line-height:0}
 .subpage h1{font-size:var(--landing-title);font-weight:600;letter-spacing:-.025em;line-height:1.05}
 .subpage p{color:var(--muted);max-width:44ch}
 .subpage .btn{align-self:flex-start}
+.partners-copy p + p{margin-block-start:12px}
 .hero__sub{font-size:var(--landing-body);line-height:1.5;max-width:35ch;text-wrap:pretty}
 
 .js .logo--hdr,.js .hero .sec__h,.js .hero__sub{
