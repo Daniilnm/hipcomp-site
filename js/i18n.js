@@ -13,6 +13,8 @@ window.HC_I18N = {
     'nav.partners': 'Partners',
     'home.logo': 'HipComp — home',
     'home.back': 'Back to home',
+    'partners.heading': 'Our partners will appear here',
+    'partners.status': 'This section is being prepared for launch.',
     'partners.groups': 'Our key partner groups',
     'partners.electronics': 'Radio-electronics industry',
     'partners.education': 'Educational institutions',
